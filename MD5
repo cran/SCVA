@@ -1,0 +1,14 @@
+d5607cf2e66707c090cbc71d312428a0 *DESCRIPTION
+48a8cf879d2234da5c8f63a2a5b818bf *NAMESPACE
+6e2c5cf9082e6559304d45c4cd0dbb52 *R/graph.CL.R
+8a3213f9ed1b4223bf1c4606dfec11e4 *R/graph.R
+a53cb054863d972af9594ef0388ea01b *R/graph.TREND.R
+4cf6fc844de03f920c6fd2ef868731c5 *R/graph.VAR.R
+2ca4e3a64e366a2d51ca3e16240d7847 *R/graph.extract.R
+a97db0cfcc357f7f29d5c784df8c4fd4 *data/AB.txt.gz
+22b7ed15add4da5b7b812d4ef7985a7e *man/AB.Rd
+bab0b3d5f1658ed4c438ab86fbaa9d33 *man/graph.CL.Rd
+9a8133fcd245c8622a0e3d3b3ae3b20e *man/graph.Rd
+4a7cde0f4e90695c0785ebda110c4c67 *man/graph.TREND.Rd
+eb1488edefa2188770ce704d84e746d2 *man/graph.VAR.Rd
+891589ea1dedbcde5f1281602983b2e9 *man/graph.extract.Rd
