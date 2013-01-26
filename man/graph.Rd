@@ -32,7 +32,7 @@ Bulte, I., & Onghena, P. (2008). An R package for single-case randomization test
 
 Bulte, I., & Onghena, P. (2009). Randomization tests for multiple baseline designs: An extension of the SCRT-R package. Behavior Research Methods, 41, 477-485.
 
-Bulte, I., & Onghena, P. (in press). When the Truth Hits You Between the Eyes: A Software Tool for the Visual Analysis of Single-Case Experimental Data. Manuscript accepted for publication in Methodology. 
+Bulte, I., & Onghena, P. (2012). When the truth hits you between the eyes: A software tool for the visual analysis of single-case experimental data. Methodology, 8, 104-114.
 
 \url{http://ppw.kuleuven.be/english/research/mesrg}
 

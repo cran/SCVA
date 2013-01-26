@@ -19,7 +19,7 @@
   }
 }
 
-\references{Bulte, I., & Onghena, P. (in press). When the Truth Hits You Between the Eyes: A Software Tool for the Visual Analysis of Single-Case Experimental Data. Manuscript accepted for publication in Methodology.}
+\references{Bulte, I., & Onghena, P. (2012). When the truth hits you between the eyes: A software tool for the visual analysis of single-case experimental data. Methodology, 8, 104-114.}
 
 \examples{data(AB)}
 

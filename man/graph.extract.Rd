@@ -35,7 +35,7 @@ When choosing to save these data values to a file (\code{save="yes"}), another w
 
 \references{
 
-Bulte, I., & Onghena, P. (in press). When the Truth Hits You Between the Eyes: A Software Tool for the Visual Analysis of Single-Case Experimental Data. Manuscript accepted for publication in Methodology. 
+Bulte, I., & Onghena, P. (2012). When the truth hits you between the eyes: A software tool for the visual analysis of single-case experimental data. Methodology, 8, 104-114.
 
 \url{http://ppw.kuleuven.be/english/research/mesrg}
 
@@ -43,8 +43,10 @@ Bulte, I., & Onghena, P. (in press). When the Truth Hits You Between the Eyes: A
 
 \note{
 This function is an adaptation of: Timothee. (2010, March 5). Data visualization (in R). Getting data from an image (introductory post). [Web log message]. Retrieved from http://rdataviz.wordpress.com/2010/03/05/getting-data-from-an-image-introductory-post/.
-
+ 
 We would like to thank David Howell for pointing us to this function.
+
+The function based on functions adopted from the ReadImages package, which has been orphaned and archived by CRAN.
 }
 
 \keyword{raw data}
