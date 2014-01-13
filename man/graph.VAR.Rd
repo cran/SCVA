@@ -10,7 +10,8 @@ Range lines consist of a pair of lines parallel to the X-axis, passing through t
 Trended ranges display changes in variability within phases. 
 For all these methods, the influence of outliers may be lessend by using a trimmed range, in which only a sample of the data set is used. }
 
-\usage{graph.VAR(design, VAR, dataset = "regular", CL, tr, data = read.table(file.choose(new = FALSE)))}
+\usage{graph.VAR(design, VAR, dataset = "regular", 
+CL, tr, data = read.table(file.choose(new = FALSE)))}
 
 \arguments{
   \item{design}{Type of single-case design: \code{"AB"}, \code{"ABA"}, \code{"ABAB"}, \code{"CRD"}(completely randomized design), \code{"RBD"} (randomized block design), \code{"ATD"} (alternating treatments design), or \code{"MBD"} (multiple-baseline AB design).}
