@@ -1,9 +1,10 @@
-graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALSE))){
+graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,ylab=NULL){
 
   x<-1:nrow(data)
   MT<-nrow(data)
   
   if(design=="CRD"|design=="ATD"|design=="RBD"|design=="AB"){
+    
     if(VAR=="RL"|VAR=="RB"){
       if(dataset=="regular"){
         A<-data[,2][data[,1]=="A"]
@@ -30,8 +31,14 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
         }
       }
       if(VAR=="RL"){
+        if (is.null(xlab)){
+          xlab="Measurement Times"
+        }
+        if (is.null(ylab)){
+          ylab="Scores"
+        }
         if(design=="RBD"|design=="CRD"|design=="ATD"){
-          plot(x,data[,2],type="n",xlab="Measurement Times",ylab="Scores")
+          plot(x,data[,2],type="n",xlab=xlab,ylab=ylab)
           points(x[data[,1]=="A"],data[,2][data[,1]=="A"],pch=1)
           points(x[data[,1]=="B"],data[,2][data[,1]=="B"],pch=16)
           a<-data[,2][data[,1]=="A"]
@@ -51,7 +58,7 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
           legend(locator(1),lty=c(2,1,3,6),pch=c(1,16,46,46),legend=c("A","B","range lines A","range lines B"),cex=0.8)
         }
         if(design=="AB"){
-          plot(x,data[,2],xlab="Measurement Times",ylab="Scores",pch=16)
+          plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
           lines(x[data[,1]=="A"],data[,2][data[,1]=="A"])
           lines(x[data[,1]=="B"],data[,2][data[,1]=="B"])
           lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
@@ -64,7 +71,13 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
         }
       }
       if(VAR=="RB"){
-        plot(x,data[,2],type="n",xlab="Range bars",ylab="Scores",xaxt="n")
+        if (is.null(xlab)){
+          xlab="Range bars"
+        }
+        if (is.null(ylab)){
+          ylab="Scores"
+        }
+        plot(x,data[,2],type="n",xlab=xlab,ylab=ylab,xaxt="n")
         mtext("A",side=1,at=MT/4)
         mtext("B",side=1,at=MT*3/4)
         lines(c(MT/4,MT/4),c(min(A),max(A)))
@@ -168,6 +181,12 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
          
     }
     if(VAR=="TR"){
+      if (is.null(xlab)){
+        xlab="Measurement Times"
+      }
+      if (is.null(ylab)){
+        ylab="Scores"
+      }
       A<-data[,2][data[,1]=="A"]
       B<-data[,2][data[,1]=="B"]
       a1<-A[1:ceiling(length(A)/2)]
@@ -235,7 +254,7 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
       minimaB<-c(minb1,minb2)
       maximaB<-c(maxb1,maxb2)
       if(design=="AB"){
-        plot(x,data[,2],xlab="Measurement Times",ylab="Scores",pch=16)
+        plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
         lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
         mtext("A",side=3,at=(sum(data[,1]=="A")+1)/2)
         mtext("B",side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
@@ -247,7 +266,7 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
         timeB<-c((length(b1)+1)/2,length(b1)+(length(b2)+1)/2)
       }
       if(design=="CRD"|design=="RBD"|design=="ATD"){
-        plot(x,data[,2],type="n",xlab="Measurement Times",ylab="Scores")
+        plot(x,data[,2],type="n",xlab=xlab,ylab=ylab)
         points(x[data[,1]=="A"],data[,2][data[,1]=="A"],pch=1)
         points(x[data[,1]=="B"],data[,2][data[,1]=="B"],pch=16)
         points(c(1/4*MT,1/4*MT),c(mina1,maxa1),pch=3,cex=1.3)
@@ -328,7 +347,13 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
         }
       }
       if(VAR=="RL"){
-        plot(x,data[,2],xlab="Measurement Times",ylab="Scores",pch=16)
+        if (is.null(xlab)){
+          xlab="Measurement Times"
+        }
+        if (is.null(ylab)){
+          ylab="Scores"
+        }
+        plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
         lines(x[data[,1]=="A1"],data[,2][data[,1]=="A1"])
         lines(x[data[,1]=="B1"],data[,2][data[,1]=="B1"])
         lines(x[data[,1]=="A2"],data[,2][data[,1]=="A2"])
@@ -352,6 +377,12 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
         }
       }
       if(VAR=="RB"){
+        if (is.null(xlab)){
+          xlab="Range bars"
+        }
+        if (is.null(ylab)){
+          ylab="Scores"
+        }
         if(CL=="mean"){
           CLA1<-mean(A1)
           CLB1<-mean(B1)
@@ -463,7 +494,7 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
           CLA2<-mest(A2,bend=tr)
           CLB2<-mest(B2,bend=tr)
         }
-        plot(x,data[,2],type="n",xlab="Range bars",ylab="Scores",xaxt="n")
+        plot(x,data[,2],type="n",xlab=xlab,ylab=ylab,xaxt="n")
         mtext("A",side=1,at=(sum(data[,1]=="A1")+1)/2)
         mtext("B",side=1,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
         mtext("A",side=1,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
@@ -645,6 +676,12 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
         minb22<-min(bb22)
         maxb22<-max(bb22)
       }
+      if (is.null(xlab)){
+        xlab="Measurement Times"
+      }
+      if (is.null(ylab)){
+        ylab="Scores"
+      }
       minimaA1<-c(mina11,mina12)
       maximaA1<-c(maxa11,maxa12)
       minimaB1<-c(minb11,minb12)
@@ -653,7 +690,7 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
       maximaA2<-c(maxa21,maxa22)
       minimaB2<-c(minb21,minb22)
       maximaB2<-c(maxb21,maxb22)
-      plot(x,data[,2],xlab="Measurement Times",ylab="Scores",pch=16)
+      plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
       lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
       lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
       mtext("A",side=3,at=(sum(data[,1]=="A1")+1)/2)
@@ -732,7 +769,13 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
           }
         }
         if(VAR=="RL"){
-          plot(x,data[,it*2],xlab="",ylab="Scores",pch=16)
+          if (is.null(xlab)){
+            xlab=""
+          }
+          if (is.null(ylab)){
+            ylab="Scores"
+          }
+          plot(x,data[,it*2],xlab=xlab,ylab=ylab,pch=16)
           lines(x[data[,(it*2)-1]=="A"],data[,it*2][data[,(it*2)-1]=="A"])
           lines(x[data[,(it*2)-1]=="B"],data[,it*2][data[,(it*2)-1]=="B"])
           lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)
@@ -744,7 +787,13 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
           lines(c((sum(data[,(it*2)-1]=="A")+1),MT),c(max(B),max(B)),lty=3)
         }
         if(VAR=="RB"){
-          plot(x,data[,it*2],type="n",xlab="",ylab="Scores",xaxt="n")
+          if (is.null(xlab)){
+            xlab=""
+          }
+          if (is.null(ylab)){
+            ylab="Scores"
+          }
+          plot(x,data[,it*2],type="n",xlab=xlab,ylab=ylab,xaxt="n")
           mtext("A",side=1,at=MT/4)
           mtext("B",side=1,at=MT*3/4)
           lines(c(MT/4,MT/4),c(min(A),max(A)))
@@ -913,7 +962,13 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
         maximaA<-c(maxa1,maxa2)
         minimaB<-c(minb1,minb2)
         maximaB<-c(maxb1,maxb2)
-        plot(x,data[,it*2],xlab="",ylab="Scores",pch=16)
+        if (is.null(xlab)){
+          xlab=""
+        }
+        if (is.null(ylab)){
+          ylab="Scores"
+        }
+        plot(x,data[,it*2],xlab=xlab,ylab=ylab,pch=16)
         lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)	
         mtext("A",side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)	
         mtext("B",side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
@@ -939,10 +994,16 @@ graph.VAR<-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choo
     }
   
     if(VAR=="RL"|VAR=="TR"){
-      title(xlab="Measurement Times",pch=16)
+      if (is.null(xlab)){
+        xlab="Measurement Times"
+      }
+      title(xlab=xlab,pch=16)
     }    
     if(VAR=="RB"){
-      title(xlab="Range Bars",pch=16)
+      if (is.null(xlab)){
+        xlab="Range Bars"
+      }
+      title(xlab=xlab,pch=16)
     }    
   
     par(mfrow=c(1,1))

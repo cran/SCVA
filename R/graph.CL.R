@@ -1,4 +1,4 @@
-graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE))){
+graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",ylab="Scores"){
 
   x<-1:nrow(data)
   
@@ -79,7 +79,7 @@ graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE))){
     }
 
     if(design=="ATD"|design=="RBD"|design=="CRD"){
-      plot(x,data[,2],type="n",xlab="Measurement Times",ylab="Scores")
+      plot(x,data[,2],type="n",xlab=xlab,ylab=ylab)
       points(x[data[,1]=="A"],data[,2][data[,1]=="A"],pch=1)
       points(x[data[,1]=="B"],data[,2][data[,1]=="B"],pch=16)
       a<-data[,2][data[,1]=="A"]
@@ -97,7 +97,7 @@ graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE))){
       legend(locator(1),lty=c(2,1,3,6),pch=c(1,16,46,46),legend=c("A","B","central tendency A","central tendency B"),cex=0.8)
     }
     if(design=="AB"){
-      plot(x,data[,2],xlab="Measurement Times",ylab="Scores",pch=16)
+      plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
       lines(x[data[,1]=="A"],data[,2][data[,1]=="A"])
       lines(x[data[,1]=="B"],data[,2][data[,1]=="B"])
       lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
@@ -225,7 +225,7 @@ graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE))){
       CLA2<-mest(A2,bend=tr)
       CLB2<-mest(B2,bend=tr)
     }
-    plot(x,data[,2],xlab="Measurement Times",ylab="Scores",pch=16)
+    plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
     lines(x[data[,1]=="A1"],data[,2][data[,1]=="A1"])
     lines(x[data[,1]=="B1"],data[,2][data[,1]=="B1"])
     lines(x[data[,1]=="A2"],data[,2][data[,1]=="A2"])
@@ -323,7 +323,7 @@ graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE))){
         CLA<-mest(A,bend=tr)	
         CLB<-mest(B,bend=tr)
       }
-      plot(x,data[,it*2],xlab="",ylab="Scores",pch=16)
+      plot(x,data[,it*2],xlab="",ylab=ylab,pch=16)
       lines(x[data[,(it*2)-1]=="A"],data[,it*2][data[,(it*2)-1]=="A"])
       lines(x[data[,(it*2)-1]=="B"],data[,it*2][data[,(it*2)-1]=="B"])
       lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)
@@ -332,7 +332,7 @@ graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE))){
       lines(c(1,(sum(data[,(it*2)-1]=="A"))),c(CLA,CLA),lty=3)
       lines(c((sum(data[,(it*2)-1]=="A")+1),nrow(data)),c(CLB,CLB),lty=3)
     }    
-    title(xlab="Measurement Times",pch=16)
+    title(xlab=xlab,pch=16)
 
     par(mfrow=c(1,1)) 
   }

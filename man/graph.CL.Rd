@@ -6,7 +6,8 @@
 
 \description{A measure of central tendency ((trimmed) mean, (broadened) median, M-estimator) is plotted as a horizontal reference line superimposed on the raw time series data.}
 
-\usage{graph.CL(design, CL, tr, data = read.table(file.choose(new = FALSE)))}
+\usage{graph.CL(design,CL,tr,data=read.table(file.choose(new=FALSE)),
+xlab="Measurement Times",ylab="Scores")}
 
 \arguments{
   \item{design}{Type of single-case design: \code{"AB"}, \code{"ABA"}, \code{"ABAB"}, \code{"CRD"}(completely randomized design), \code{"RBD"} (randomized block design), \code{"ATD"} (alternating treatments design), or \code{"MBD"} (multiple-baseline AB design).}
@@ -17,6 +18,10 @@
 If \code{CL="mest"}: the desired value for the constant K. Usually a percentile of the standard normal distribution is chosen. Wilcox (2005) suggests using K=1.28, which corresponds to the 90th percentile of the standard normal distribution and covers 80 percent of the underlying distribution.}
 
   \item{data}{File in which the data can be found. Default: a window pops up in which the file can be selected.}
+  
+  \item{xlab}{Label x axis}
+  
+  \item{ylab}{Label y axis}
 
 }
 

@@ -9,7 +9,8 @@ A vertical line graph plots the deviations from each data point to a measure of 
 Regression lines superimpose a linear function on the raw data by means of least squares regression, the split-middle method or the resistant trend line fitting method.
 The presence of a nonlinear trend can be displayed with running medians. }
 
-\usage{graph.TREND(design, TREND, CL, tr, data = read.table(file.choose(new = FALSE)))}
+\usage{graph.TREND(design, TREND, CL, tr, data = read.table(file.choose(new = FALSE)),
+xlab=NULL,ylab=NULL)}
 
 \arguments{
   \item{design}{Type of single-case design: \code{"AB"}, \code{"ABA"}, \code{"ABAB"}, \code{"CRD"}(completely randomized design), \code{"RBD"} (randomized block design), \code{"ATD"} (alternating treatments design), or \code{"MBD"} (multiple-baseline AB design).}
@@ -22,6 +23,10 @@ The presence of a nonlinear trend can be displayed with running medians. }
 If \code{CL="mest"}: the desired value for the constant K. Usually a percentile of the standard normal distribution is chosen. Wilcox (2005) suggests using K=1.28, which corresponds to the 90th percentile of the standard normal distribution and covers 80 percent of the underlying distribution.}
 
   \item{data}{File in which the data can be found. Default: a window pops up in which the file can be selected.}
+  
+  \item{xlab}{Label x axis}
+  
+  \item{ylab}{Label y axis}
 
 }
 

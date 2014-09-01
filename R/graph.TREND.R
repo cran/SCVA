@@ -1,4 +1,4 @@
-graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE))){
+graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,ylab=NULL){
   
   x<-1:nrow(data)
   MT<-nrow(data)
@@ -83,7 +83,13 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
       residualsA<-A-CLA
       residualsB<-B-CLB
       residuals<-c(residualsA,residualsB)
-      plot(x,residuals,xlab="Measurement Times",ylab="Residuals",type="n")
+      if (is.null(xlab)){
+        xlab <- "Measurement Times"
+      }
+      if (is.null(ylab)){
+        ylab <- "Residuals"
+      }
+      plot(x,residuals,xlab=xlab,ylab=ylab,type="n")
       lines(c(1,length(residualsA)),c(0,0))
       for(it in 1:length(residualsA)){
         lines(c(it,it),c(residualsA[it],0))
@@ -96,14 +102,20 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
       mtext("B",side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
     }
     if(TREND=="RTL"|TREND=="SM"|TREND=="LSR"|TREND=="RM3"|TREND=="RM5"|TREND=="RM42"){
+      if (is.null(xlab)){
+        xlab <- "Measurement Times"
+      }
+      if (is.null(ylab)){
+        ylab <- "Scores"
+      }
       if(design=="AB"){
-        plot(x,data[,2],xlab="Measurement Times",ylab="Scores",pch=16)
+        plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
         lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
         mtext("A",side=3,at=(sum(data[,1]=="A")+1)/2)
         mtext("B",side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
       }
       if(design=="CRD"|design=="ATD"|design=="RBD"){
-        plot(x,data[,2],type="n",xlab="Measurement Times",ylab="Scores")
+        plot(x,data[,2],type="n",xlab=xlab,ylab=ylab)
         points(x[data[,1]=="A"],data[,2][data[,1]=="A"],pch=1)
         points(x[data[,1]=="B"],data[,2][data[,1]=="B"],pch=16)
       }
@@ -544,7 +556,13 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
       residualsA2<-A2-CLA2
       residualsB2<-B2-CLB2
       residuals<-c(residualsA1,residualsB1,residualsA2,residualsB2)
-      plot(x,residuals,xlab="Measurement Times",ylab="Residuals",type="n")
+      if (is.null(xlab)){
+        xlab <- "Measurement Times"
+      }
+      if (is.null(ylab)){
+        ylab <- "Residuals"
+      }
+      plot(x,residuals,xlab=xlab,ylab=ylab,type="n")
       lines(c(1,length(residualsA1)),c(0,0))
       for(it in 1:length(residualsA1)){
         lines(c(it,it),c(residualsA1[it],0))
@@ -569,7 +587,13 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
       }
     }
     if(TREND=="RTL"|TREND=="SM"|TREND=="LSR"|TREND=="RM3"|TREND=="RM5"|TREND=="RM42"){
-      plot(x,data[,2],xlab="Measurement Times",ylab="Scores",pch=16)
+      if (is.null(xlab)){
+        xlab <- "Measurement Times"
+      }
+      if (is.null(ylab)){
+        ylab <- "Scores"
+      }
+      plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
       lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
       lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
       mtext("A",side=3,at=(sum(data[,1]=="A1")+1)/2)
@@ -1127,7 +1151,13 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
         residualsA<-A-CLA
         residualsB<-B-CLB
         residuals<-c(residualsA,residualsB)
-        plot(x,residuals,xlab="",ylab="Residuals",type="n")
+        if (is.null(xlab)){
+          xlab <- ""
+        }
+        if (is.null(ylab)){
+          ylab <- "Residuals"
+        }
+        plot(x,residuals,xlab=xlab,ylab=ylab,type="n")
         lines(c(1,length(residualsA)),c(0,0))
         for(itr in 1:length(residualsA)){
           lines(c(itr,itr),c(residualsA[itr],0))
@@ -1140,7 +1170,13 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
         mtext("B",side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
       }
       if(TREND=="RTL"|TREND=="SM"|TREND=="LSR"|TREND=="RM3"|TREND=="RM5"|TREND=="RM42"){
-        plot(x,data[,it*2],xlab="",ylab="Scores",pch=16)
+        if (is.null(xlab)){
+          xlab <- ""
+        }
+        if (is.null(ylab)){
+          ylab <- "Scores"
+        }
+        plot(x,data[,it*2],xlab=xlab,ylab=ylab,pch=16)
         lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)
         mtext("A",side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
         mtext("B",side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
@@ -1378,7 +1414,10 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
         }
       }       
     }
-    title(xlab="Measurement Times",pch=16)
+    if (is.null(xlab)){
+      xlab <- "Measurement Times"
+    }
+    title(xlab=xlab,pch=16)
 
     par(mfrow=c(1,1))
   }
