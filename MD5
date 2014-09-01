@@ -1,4 +1,4 @@
-dfd88962ffe188f2d8ad82df75b8a7d1 *DESCRIPTION
+73f718aa4a8ed013f191131146d6dd47 *DESCRIPTION
 3f0d7abbc54e53f146a865cca28525fd *NAMESPACE
 0d38682dfd8ef9eb43248be6d10a6584 *R/graph.CL.R
 795f33e0b8deb6595f57ac97140e477c *R/graph.R
@@ -7,7 +7,7 @@ de1b7dc5e4960ee4305f5dcf9d8246c8 *R/graph.VAR.R
 cd82da6785679b7ec8bbd2775290ca20 *R/graph.extract.R
 0765a451cec5827cd31aa5d0ca2ada46 *data/AB.rda
 477c2a6e6e7b6ce6f06d53bf7fe067ed *man/AB.Rd
-eb02521df46924c41d43e2f339caacb7 *man/SCVA-package.Rd
+52e6acc8901c0894852e008ee81e681e *man/SCVA-package.Rd
 f831add5d93809dd3341b911f56a7f02 *man/graph.CL.Rd
 26b728c295de300a1ed45f17aad398be *man/graph.Rd
 3e463b045e8bb6fe5d90790799c4b2db *man/graph.TREND.Rd
