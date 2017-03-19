@@ -10,11 +10,12 @@ Range lines consist of a pair of lines parallel to the X-axis, passing through t
 Trended ranges display changes in variability within phases. 
 For all these methods, the influence of outliers may be lessend by using a trimmed range, in which only a sample of the data set is used. }
 
-\usage{graph.VAR(design, VAR, dataset = "regular", 
-CL, tr, data = read.table(file.choose(new = FALSE)),xlab=NULL,ylab=NULL)}
+\usage{graph.VAR(design, VAR, dataset = "regular", CL, tr, 
+data = read.table(file.choose(new = FALSE)), 
+xlab = NULL, ylab = NULL, ylim = NULL, legend = NULL)}
 
 \arguments{
-  \item{design}{Type of single-case design: \code{"AB"}, \code{"ABA"}, \code{"ABAB"}, \code{"CRD"}(completely randomized design), \code{"RBD"} (randomized block design), \code{"ATD"} (alternating treatments design), or \code{"MBD"} (multiple-baseline AB design).}
+  \item{design}{Type of single-case design: \code{"AB"}, \code{"ABA"}, \code{"ABAB"}, \code{"CRD"}(completely randomized design), \code{"RBD"} (randomized block design), \code{"ATD"} (alternating treatments design), \code{"MBD"} (multiple-baseline AB design) or \code{"Custom"} (user specified design).}
 
   \item{VAR}{Estimate of variability: range bar graph (\code{"RB"}), range lines (\code{"RL"}), or trended range (\code{"TR"}).}
 
@@ -27,9 +28,13 @@ If \code{CL="mest"}: the desired value for the constant K. Usually a percentile 
 
   \item{data}{File in which the data can be found. Default: a window pops up in which the file can be selected.}
   
-  \item{xlab}{Label x axis}
+  \item{xlab}{Label x axis.}
   
-  \item{ylab}{Label y axis}
+  \item{ylab}{Label y axis.}
+  
+  \item{ylim}{Y axis limits in the form \code{c(min, max)}.}
+
+  \item{legend}{Optional legend location x and y coordinates in the form \code{c(x coordinate, y coordinate)}. Only used when design is \code{"CRD"}, \code{"RBD"}, \code{"ATD"} or \code{"Custom"}.}
 
 }
 

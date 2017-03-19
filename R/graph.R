@@ -1,10 +1,11 @@
-graph<-function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",ylab="Scores"){
+graph <-
+function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",ylab="Scores",ylim=NULL,legend=NULL){
 
   MT<-nrow(data)
   x<-1:MT
   
-  if(design=="CRD"|design=="RBD"|design=="ATD"){
-    plot(x,data[,2],type="n",xlab=xlab,ylab=ylab)
+  if(design=="CRD"|design=="RBD"|design=="ATD"|design=="Custom"){
+    plot(x,data[,2],type="n",xlab=xlab,ylab=ylab,ylim=ylim)
     points(x[data[,1]=="A"],data[,2][data[,1]=="A"],pch=1)
     points(x[data[,1]=="B"],data[,2][data[,1]=="B"],pch=16)
     a<-data[,2][data[,1]=="A"]
@@ -17,11 +18,14 @@ graph<-function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement
     for(it in 1:(length(b)-1)){
       lines(c(MTB[it],MTB[it+1]),c(b[it],b[it+1]),lty=1)
     }
-    legend(locator(1),lty=c(2,1),pch=c(1,16),legend=c("A","B"))
+    if(is.null(legend))
+      legend(locator(1),lty=c(2,1),pch=c(1,16),legend=c("A","B"))
+    else
+      legend(legend[1],y=legend[2],lty=c(2,1),pch=c(1,16),legend=c("A","B"))
   }
   
   if(design=="AB"){
-    plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
+    plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
     lines(x[data[,1]=="A"],data[,2][data[,1]=="A"])
     lines(x[data[,1]=="B"],data[,2][data[,1]=="B"])
     lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
@@ -31,7 +35,7 @@ graph<-function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement
   
   
   if(design=="ABA"){
-    plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
+    plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
     lines(x[data[,1]=="A1"],data[,2][data[,1]=="A1"])
     lines(x[data[,1]=="B1"],data[,2][data[,1]=="B1"])
     lines(x[data[,1]=="A2"],data[,2][data[,1]=="A2"])
@@ -43,7 +47,7 @@ graph<-function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement
   }
   
   if(design=="ABAB"){
-    plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
+    plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
     lines(x[data[,1]=="A1"],data[,2][data[,1]=="A1"])
     lines(x[data[,1]=="B1"],data[,2][data[,1]=="B1"])
     lines(x[data[,1]=="A2"],data[,2][data[,1]=="A2"])
@@ -61,7 +65,7 @@ graph<-function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement
     N<-ncol(data)/2
     par(mfrow=c(N,1))
     for(it in 1:N){
-      plot(x,data[,it*2],xlab="",ylab=ylab,pch=16)
+      plot(x,data[,it*2],xlab="",ylab=ylab,ylim=ylim,pch=16)
       lines(x[data[,(it*2)-1]=="A"],data[,it*2][data[,(it*2)-1]=="A"])
       lines(x[data[,(it*2)-1]=="B"],data[,it*2][data[,(it*2)-1]=="B"])
       lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)

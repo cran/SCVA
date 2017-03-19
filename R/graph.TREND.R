@@ -1,9 +1,10 @@
-graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,ylab=NULL){
+graph.TREND <-
+function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,ylab=NULL,ylim=NULL,legend=NULL){
   
   x<-1:nrow(data)
   MT<-nrow(data)
   
-  if(design=="AB"|design=="CRD"|design=="ATD"|design=="RBD"){
+  if(design=="AB"|design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
     A<-data[,2][data[,1]=="A"]
     B<-data[,2][data[,1]=="B"]
     MTA<-x[data[,1]=="A"]
@@ -89,7 +90,7 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
       if (is.null(ylab)){
         ylab <- "Residuals"
       }
-      plot(x,residuals,xlab=xlab,ylab=ylab,type="n")
+      plot(x,residuals,xlab=xlab,ylab=ylab,ylim=ylim,type="n")
       lines(c(1,length(residualsA)),c(0,0))
       for(it in 1:length(residualsA)){
         lines(c(it,it),c(residualsA[it],0))
@@ -109,13 +110,13 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
         ylab <- "Scores"
       }
       if(design=="AB"){
-        plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
+        plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
         lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
         mtext("A",side=3,at=(sum(data[,1]=="A")+1)/2)
         mtext("B",side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
       }
-      if(design=="CRD"|design=="ATD"|design=="RBD"){
-        plot(x,data[,2],type="n",xlab=xlab,ylab=ylab)
+      if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
+        plot(x,data[,2],type="n",xlab=xlab,ylab=ylab,ylim=ylim)
         points(x[data[,1]=="A"],data[,2][data[,1]=="A"],pch=1)
         points(x[data[,1]=="B"],data[,2][data[,1]=="B"],pch=16)
       }
@@ -128,10 +129,13 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
           lines(c(1,length(A)),c(interceptLSRa+slopeLSRa,interceptLSRa+slopeLSRa*length(A)),lty=2)
           lines(c(length(A)+1,MT),c(interceptLSRb+slopeLSRb*(length(A)+1),interceptLSRb+slopeLSRb*MT),lty=2)
         }
-        if(design=="CRD"|design=="ATD"|design=="RBD"){
+        if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
           lines(c(1,MT),c(interceptLSRa+slopeLSRa,interceptLSRa+slopeLSRa*MT),lty=1)
           lines(c(1,MT),c(interceptLSRb+slopeLSRb,interceptLSRb+slopeLSRb*MT),lty=16)
-          legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","trend line (LSR) A","trend line (LSR) B"),cex=0.8)
+          if(is.null(legend))
+            legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","trend line (LSR) A","trend line (LSR) B"),cex=0.8)
+          else
+            legend(legend[1],y=legend[2],lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","trend line (LSR) A","trend line (LSR) B"),cex=0.8)
         }
       }
       if(TREND=="SM"){
@@ -215,7 +219,7 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
           interceptB2<-coefficients(lm(valuesB2~timeB2))[1]
           slopeB2<-coefficients(lm(valuesB2~timeB2))[2]
         }
-        if(design=="CRD"|design=="ATD"|design=="RBD"){
+        if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
           if(length(A)%%2==0){
             lines(c(1,MT),c(interceptA+slopeA,interceptA+slopeA*MT),lty=3)
           }
@@ -230,7 +234,10 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
             lines(c(1,MT),c(interceptB1+slopeB1,interceptB1+slopeB1*MT),lty=6)
             lines(c(1,MT),c(interceptB2+slopeB2,interceptB2+slopeB2*MT),lty=6)
           }
-          legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","trend line (split-middle) A","trend line (split-middle) B"),cex=0.8)
+          if(is.null(legend))
+            legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","trend line (split-middle) A","trend line (split-middle) B"),cex=0.8)
+          else
+            legend(legend[1],y=legend[2],lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","trend line (split-middle) A","trend line (split-middle) B"),cex=0.8)
         }
         if(design=="AB"){
           if(length(A)%%2==0){
@@ -314,7 +321,7 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
         interceptA<-(1/3)*((medVALUEa1+medVALUEa2+medVALUEa3)-slopeA*(medTIMEa1+medTIMEa2+medTIMEa3))
         slopeB<-(medVALUEb3-medVALUEb1)/(medTIMEb3-medTIMEb1)
         interceptB<-(1/3)*((medVALUEb1+medVALUEb2+medVALUEb3)-slopeB*(medTIMEb1+medTIMEb2+medTIMEb3))
-        if(design=="CRD"|design=="ATD"|design=="RBD"){
+        if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
           lines(c(1,MT),c(interceptA+slopeA,interceptA+slopeA*MT),lty=3)
           lines(c(1,MT),c(interceptB+slopeB,interceptB+slopeB*MT),lty=6)
         }
@@ -332,8 +339,11 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
         points(medTIMEb3,medVALUEb3,cex=1.2)
         lines(c(medTIMEb1,medTIMEb2),c(medVALUEb1,medVALUEb2),lty=6)
         lines(c(medTIMEb2,medTIMEb3),c(medVALUEb2,medVALUEb3),lty=6)
-        if(design=="CRD"|design=="ATD"|design=="RBD"){
-          legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","resistant trend line A","resistant trend line B"),cex=0.8)
+        if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
+          if(is.null(legend))
+            legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","resistant trend line A","resistant trend line B"),cex=0.8)
+          else
+            legend(legend[1],y=legend[2],lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","resistant trend line A","resistant trend line B"),cex=0.8)
         }
       }
       if(TREND=="RM3"){
@@ -361,8 +371,11 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
           points(times3B[it],RM3b[it],pch=4)
           lines(c(times3B[it],times3B[it+1]),c(RM3b[it],RM3b[it+1]),lty=2)
         }
-        if(design=="CRD"|design=="ATD"|design=="RBD"){
-          legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (3) A","running medians (3) B"),cex=0.8)
+        if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
+          if(is.null(legend))
+            legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (3) A","running medians (3) B"),cex=0.8)
+          else
+            legend(legend[1],y=legend[2],lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (3) A","running medians (3) B"),cex=0.8)
         }
       }
       if(TREND=="RM5"){
@@ -390,8 +403,11 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
           points(times5B[it],RM5b[it],pch=4)
           lines(c(times5B[it],times5B[it+1]),c(RM5b[it],RM5b[it+1]),lty=2)
         }
-        if(design=="CRD"|design=="ATD"|design=="RBD"){
-          legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (5) A","running medians (5) B"),cex=0.8)
+        if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
+          if(is.null(legend))
+            legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (5) A","running medians (5) B"),cex=0.8)
+          else
+            legend(legend[1],y=legend[2],lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (5) A","running medians (5) B"),cex=0.8)
         }
       }
       if(TREND=="RM42"){
@@ -427,8 +443,11 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
           points(times42B[it],RM42b[it],pch=4)
           lines(c(times42B[it],times42B[it+1]),c(RM42b[it],RM42b[it+1]),lty=2)
         }
-        if(design=="CRD"|design=="ATD"|design=="RBD"){
-          legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (42) A","running medians (42) B"),cex=0.8)
+        if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
+          if(is.null(legend))
+            legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (42) A","running medians (42) B"),cex=0.8)
+          else
+            legend(legend[1],y=legend[2],lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (42) A","running medians (42) B"),cex=0.8)
         }
       }
     }
@@ -562,7 +581,7 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
       if (is.null(ylab)){
         ylab <- "Residuals"
       }
-      plot(x,residuals,xlab=xlab,ylab=ylab,type="n")
+      plot(x,residuals,xlab=xlab,ylab=ylab,ylim=ylim,type="n")
       lines(c(1,length(residualsA1)),c(0,0))
       for(it in 1:length(residualsA1)){
         lines(c(it,it),c(residualsA1[it],0))
@@ -593,7 +612,7 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
       if (is.null(ylab)){
         ylab <- "Scores"
       }
-      plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
+      plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
       lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
       lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
       mtext("A",side=3,at=(sum(data[,1]=="A1")+1)/2)
@@ -1157,7 +1176,7 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
         if (is.null(ylab)){
           ylab <- "Residuals"
         }
-        plot(x,residuals,xlab=xlab,ylab=ylab,type="n")
+        plot(x,residuals,xlab=xlab,ylab=ylab,ylim=ylim,type="n")
         lines(c(1,length(residualsA)),c(0,0))
         for(itr in 1:length(residualsA)){
           lines(c(itr,itr),c(residualsA[itr],0))
@@ -1176,7 +1195,7 @@ graph.TREND <- function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE
         if (is.null(ylab)){
           ylab <- "Scores"
         }
-        plot(x,data[,it*2],xlab=xlab,ylab=ylab,pch=16)
+        plot(x,data[,it*2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
         lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)
         mtext("A",side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
         mtext("B",side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))

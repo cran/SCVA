@@ -8,17 +8,21 @@
 \description{The observed single-case data are plotted.}
 
 \usage{graph(design,data=read.table(file.choose(new=FALSE)),
-xlab="Measurement Times",ylab="Scores")}
+xlab="Measurement Times",ylab="Scores",ylim=NULL,legend=NULL)}
 
 \arguments{
 
-  \item{design}{Type of single-case design: \code{"AB"}, \code{"ABA"}, \code{"ABAB"}, \code{"CRD"}(completely randomized design), \code{"RBD"} (randomized block design), \code{"ATD"} (alternating treatments design), or \code{"MBD"} (multiple-baseline AB design).}
+  \item{design}{Type of single-case design: \code{"AB"}, \code{"ABA"}, \code{"ABAB"}, \code{"CRD"}(completely randomized design), \code{"RBD"} (randomized block design), \code{"ATD"} (alternating treatments design), \code{"MBD"} (multiple-baseline AB design) or \code{"Custom"} (user specified design).}
 
   \item{data}{File in which the data can be found. Default: a window pops up in which the file can be selected.} 
   
-    \item{xlab}{Label x axis}
+  \item{xlab}{Label x axis.}
   
-  \item{ylab}{Label y axis}
+  \item{ylab}{Label y axis.}
+  
+  \item{ylim}{Y axis limits in the form \code{c(min, max)}.}
+
+  \item{legend}{Optional legend location x and y coordinates in the form \code{c(x coordinate, y coordinate)}. Only used when design is \code{"CRD"}, \code{"RBD"}, \code{"ATD"} or \code{"Custom"}.}
 
 }
 

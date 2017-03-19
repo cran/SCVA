@@ -1,8 +1,9 @@
-graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",ylab="Scores"){
+graph.CL <-
+function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",ylab="Scores",ylim=NULL,legend=NULL){
 
   x<-1:nrow(data)
   
-  if(design=="ATD"|design=="RBD"|design=="CRD"|design=="AB"){
+  if(design=="ATD"|design=="RBD"|design=="CRD"|design=="AB"|design=="Custom"){
     A<-data[,2][data[,1]=="A"]
     B<-data[,2][data[,1]=="B"]
     
@@ -78,8 +79,8 @@ graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Me
       CLB<-mest(B,bend=tr)
     }
 
-    if(design=="ATD"|design=="RBD"|design=="CRD"){
-      plot(x,data[,2],type="n",xlab=xlab,ylab=ylab)
+    if(design=="ATD"|design=="RBD"|design=="CRD"|design=="Custom"){
+      plot(x,data[,2],type="n",xlab=xlab,ylab=ylab,ylim=ylim)
       points(x[data[,1]=="A"],data[,2][data[,1]=="A"],pch=1)
       points(x[data[,1]=="B"],data[,2][data[,1]=="B"],pch=16)
       a<-data[,2][data[,1]=="A"]
@@ -94,10 +95,13 @@ graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Me
       }
       lines(c(1,nrow(data)),c(CLA,CLA),lty=3)
       lines(c(1,nrow(data)),c(CLB,CLB),lty=6)
-      legend(locator(1),lty=c(2,1,3,6),pch=c(1,16,46,46),legend=c("A","B","central tendency A","central tendency B"),cex=0.8)
+      if(is.null(legend))
+        legend(locator(1),lty=c(2,1,3,6),pch=c(1,16,46,46),legend=c("A","B","central tendency A","central tendency B"),cex=0.8)
+      else
+        legend(legend[1],y=legend[2],lty=c(2,1,3,6),pch=c(1,16,46,46),legend=c("A","B","central tendency A","central tendency B"),cex=0.8)
     }
     if(design=="AB"){
-      plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
+      plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
       lines(x[data[,1]=="A"],data[,2][data[,1]=="A"])
       lines(x[data[,1]=="B"],data[,2][data[,1]=="B"])
       lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
@@ -225,7 +229,7 @@ graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Me
       CLA2<-mest(A2,bend=tr)
       CLB2<-mest(B2,bend=tr)
     }
-    plot(x,data[,2],xlab=xlab,ylab=ylab,pch=16)
+    plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
     lines(x[data[,1]=="A1"],data[,2][data[,1]=="A1"])
     lines(x[data[,1]=="B1"],data[,2][data[,1]=="B1"])
     lines(x[data[,1]=="A2"],data[,2][data[,1]=="A2"])
@@ -323,7 +327,7 @@ graph.CL<-function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Me
         CLA<-mest(A,bend=tr)	
         CLB<-mest(B,bend=tr)
       }
-      plot(x,data[,it*2],xlab="",ylab=ylab,pch=16)
+      plot(x,data[,it*2],xlab="",ylab=ylab,ylim=ylim,pch=16)
       lines(x[data[,(it*2)-1]=="A"],data[,it*2][data[,(it*2)-1]=="A"])
       lines(x[data[,(it*2)-1]=="B"],data[,it*2][data[,(it*2)-1]=="B"])
       lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)

@@ -1,6 +1,5 @@
-## The functions imagematrix', 'rgb2grey', 'clipping' and 'read.jpeg' are adopted from the ReadImages package, which has been orphaned and archived by CRAN.
-
-graph.extract<-function(MT, refX, refY, save="no", image=read.jpeg(file.choose())){
+graph.extract <-
+function(MT, refX, refY, save="no", image=read.jpeg(file.choose())){
 
 imagematrix <- function(mat, type=NULL, ncol=dim(mat)[1], nrow=dim(mat)[2],
                         noclipping=FALSE) {
@@ -71,4 +70,3 @@ read.jpeg <- function(filename) {
   return(rounded)
 
 }
-

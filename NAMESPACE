@@ -1,2 +1,4 @@
+importFrom("graphics", "legend", "lines", "locator", "mtext", "par", "plot", "points", "title")
+importFrom("stats", "coefficients", "lm", "mad", "median")
+importFrom("utils", "read.table", "write.table")
 export(graph, graph.CL, graph.VAR, graph.TREND, graph.extract)
-
