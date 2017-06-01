@@ -1,5 +1,5 @@
 graph.VAR <-
-function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,ylab=NULL,ylim=NULL,legend=NULL){
+function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,ylab=NULL,ylim=NULL,legendxy=NULL,labels=c("A","B","A","B")){
 
   x<-1:nrow(data)
   MT<-nrow(data)
@@ -56,18 +56,19 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           lines(c(1,MT),c(max(A),max(A)),lty=3)
           lines(c(1,MT),c(min(B),min(B)),lty=6)
           lines(c(1,MT),c(max(B),max(B)),lty=6)
-          if(is.null(legend))
-            legend(locator(1),lty=c(2,1,3,6),pch=c(1,16,46,46),legend=c("A","B","range lines A","range lines B"),cex=0.8)
+          var_labels<-c(labels[1:2],paste("range lines",labels[1:2]))
+          if(is.null(legendxy))
+            legend(locator(1),lty=c(2,1,3,6),pch=c(1,16,46,46),legend=var_labels,cex=0.8)
           else
-            legend(legend[1],y=legend[2],lty=c(2,1,3,6),pch=c(1,16,46,46),legend=c("A","B","range lines A","range lines B"),cex=0.8)
+            legend(legendxy[1],y=legendxy[2],lty=c(2,1,3,6),pch=c(1,16,46,46),legend=var_labels,cex=0.8)
         }
         if(design=="AB"){
           plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
           lines(x[data[,1]=="A"],data[,2][data[,1]=="A"])
           lines(x[data[,1]=="B"],data[,2][data[,1]=="B"])
           lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-          mtext("A",side=3,at=(sum(data[,1]=="A")+1)/2)
-          mtext("B",side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
+          mtext(labels[1],side=3,at=(sum(data[,1]=="A")+1)/2)
+          mtext(labels[2],side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
           lines(c(1,(sum(data[,1]=="A"))),c(min(A),min(A)),lty=3)
           lines(c(1,(sum(data[,1]=="A"))),c(max(A),max(A)),lty=3)
           lines(c((sum(data[,1]=="A")+1),MT),c(min(B),min(B)),lty=3)
@@ -82,8 +83,8 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           ylab="Scores"
         }
         plot(x,data[,2],type="n",xlab=xlab,ylab=ylab,ylim=ylim,xaxt="n")
-        mtext("A",side=1,at=MT/4)
-        mtext("B",side=1,at=MT*3/4)
+        mtext(labels[1],side=1,at=MT/4)
+        mtext(labels[2],side=1,at=MT*3/4)
         lines(c(MT/4,MT/4),c(min(A),max(A)))
         lines(c(MT*3/4,MT*3/4),c(min(B),max(B)))
         if(dataset=="trimmed"){
@@ -260,8 +261,8 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
       if(design=="AB"){
         plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
         lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-        mtext("A",side=3,at=(sum(data[,1]=="A")+1)/2)
-        mtext("B",side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
+        mtext(labels[1],side=3,at=(sum(data[,1]=="A")+1)/2)
+        mtext(labels[2],side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
         points(c((length(a1)+1)/2,(length(a1)+1)/2),c(mina1,maxa1),pch=3,cex=1.3)
         points(c(length(a1)+(length(a2)+1)/2,length(a1)+(length(a2)+1)/2),c(mina2,maxa2),pch=3,cex=1.3)
         points(c((length(b1)+1)/2+sum(data[,1]=="A"),(length(b1)+1)/2+sum(data[,1]=="A")),c(minb1,maxb1),pch=3,cex=1.3)
@@ -299,10 +300,11 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
         lines(c(1,MT),c(interceptMAXA+slopeMAXA,interceptMAXA+slopeMAXA*MT),lty=2)
         lines(c(1,MT),c(interceptMINB+slopeMINB,interceptMINB+slopeMINB*MT),lty=3)
         lines(c(1,MT),c(interceptMAXB+slopeMAXB,interceptMAXB+slopeMAXB*MT),lty=3)
-        if(is.null(legend))
-          legend(locator(1),lty=c(0,0,2,3),pch=c(1,16,46,46),legend=c("A","B","trended range lines A","trended range lines B"),cex=0.8)
+        var_labels<-c(labels[1:2],paste("trended range lines",labels[1:2]))
+        if(is.null(legendxy))
+          legend(locator(1),lty=c(0,0,2,3),pch=c(1,16,46,46),legend=var_labels,cex=0.8)
         else
-          legend(legend[1],y=legend[2],lty=c(0,0,2,3),pch=c(1,16,46,46),legend=c("A","B","trended range lines A","trended range lines B"),cex=0.8)
+          legend(legendxy[1],y=legendxy[2],lty=c(0,0,2,3),pch=c(1,16,46,46),legend=var_labels,cex=0.8)
       }
     }
   }
@@ -366,9 +368,9 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
         lines(x[data[,1]=="A2"],data[,2][data[,1]=="A2"])
         lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
         lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-        mtext("A",side=3,at=(sum(data[,1]=="A1")+1)/2)
-        mtext("B",side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
-        mtext("A",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
+        mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
+        mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
+        mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
         lines(c(1,(sum(data[,1]=="A1"))),c(min(A1),min(A1)),lty=3)
         lines(c(1,(sum(data[,1]=="A1"))),c(max(A1),max(A1)),lty=3)
         lines(c((sum(data[,1]=="A1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1"))),c(min(B1),min(B1)),lty=3)
@@ -377,7 +379,7 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
         lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2"))),c(max(A2),max(A2)),lty=3)
         if(design=="ABAB"){
           lines(x[data[,1]=="B2"],data[,2][data[,1]=="B2"])
-          mtext("B",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
+          mtext(labels[4],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
           lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
           lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+1),nrow(data)),c(min(B2),min(B2)),lty=3)
           lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+1),nrow(data)),c(max(B2),max(B2)),lty=3)
@@ -502,9 +504,9 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           CLB2<-mest(B2,bend=tr)
         }
         plot(x,data[,2],type="n",xlab=xlab,ylab=ylab,ylim=ylim,xaxt="n")
-        mtext("A",side=1,at=(sum(data[,1]=="A1")+1)/2)
-        mtext("B",side=1,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
-        mtext("A",side=1,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
+        mtext(labels[1],side=1,at=(sum(data[,1]=="A1")+1)/2)
+        mtext(labels[2],side=1,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
+        mtext(labels[3],side=1,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
         lines(c((sum(data[,1]=="A1")+1)/2,(sum(data[,1]=="A1")+1)/2),c(min(A1),max(A1)))
         lines(c((sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2),(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2)),c(min(B1),max(B1)))
         lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2)),c(min(A2),max(A2)))
@@ -512,7 +514,7 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
         lines(c(((sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))-MT/40,((sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))+MT/40),c(CLB1,CLB1))
         lines(c(((sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))-MT/40,((sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))+MT/40),c(CLA2,CLA2))
         if(design=="ABAB"){
-          mtext("B",side=1,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
+          mtext(labels[4],side=1,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
           lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2)),c(min(A2),max(A2)))
           lines(c(((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))-MT/40,((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))+MT/40),c(CLB2,CLB2))
         }
@@ -700,9 +702,9 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
       plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
       lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
       lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-      mtext("A",side=3,at=(sum(data[,1]=="A1")+1)/2)
-      mtext("B",side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
-      mtext("A",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
+      mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
+      mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
+      mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
       points(c((length(a11)+1)/2,(length(a11)+1)/2),c(mina11,maxa11),pch=3,cex=1.3)
       points(c(length(a11)+(length(a12)+1)/2,length(a11)+(length(a12)+1)/2),c(mina12,maxa12),pch=3,cex=1.3)
       points(c((length(b11)+1)/2+sum(data[,1]=="A1"),(length(b11)+1)/2+sum(data[,1]=="A1")),c(minb11,maxb11),pch=3,cex=1.3)
@@ -732,7 +734,7 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
       lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+1,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")),c(interceptMAXA2+slopeMAXA2,interceptMAXA2+slopeMAXA2*sum(data[,1]=="A2")),lty=3)
       if(design=="ABAB"){
         lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-        mtext("B",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
+        mtext(labels[4],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
         points(c((length(b21)+1)/2+sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2"),(length(b21)+1)/2+sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")),c(minb21,maxb21),pch=3,cex=1.3)
         points(c(length(b21)+(length(b22)+1)/2+sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2"),length(b21)+(length(b22)+1)/2+sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")),c(minb22,maxb22),pch=3,cex=1.3)
         timeB2<-c((length(b21)+1)/2,length(b21)+(length(b22)+1)/2)
@@ -786,8 +788,8 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           lines(x[data[,(it*2)-1]=="A"],data[,it*2][data[,(it*2)-1]=="A"])
           lines(x[data[,(it*2)-1]=="B"],data[,it*2][data[,(it*2)-1]=="B"])
           lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)
-          mtext("A",side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
-          mtext("B",side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
+          mtext(labels[1],side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
+          mtext(labels[2],side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
           lines(c(1,(sum(data[,(it*2)-1]=="A"))),c(min(A),min(A)),lty=3)
           lines(c(1,(sum(data[,(it*2)-1]=="A"))),c(max(A),max(A)),lty=3)
           lines(c((sum(data[,(it*2)-1]=="A")+1),MT),c(min(B),min(B)),lty=3)
@@ -801,8 +803,8 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
             ylab="Scores"
           }
           plot(x,data[,it*2],type="n",xlab=xlab,ylab=ylab,ylim=ylim,xaxt="n")
-          mtext("A",side=1,at=MT/4)
-          mtext("B",side=1,at=MT*3/4)
+          mtext(labels[1],side=1,at=MT/4)
+          mtext(labels[2],side=1,at=MT*3/4)
           lines(c(MT/4,MT/4),c(min(A),max(A)))
           lines(c(MT*3/4,MT*3/4),c(min(B),max(B)))
           if(dataset=="trimmed"){
@@ -977,8 +979,8 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
         }
         plot(x,data[,it*2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
         lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)	
-        mtext("A",side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)	
-        mtext("B",side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
+        mtext(labels[1],side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)	
+        mtext(labels[2],side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
         points(c((length(a1)+1)/2,(length(a1)+1)/2),c(mina1,maxa1),pch=3,cex=1.3)
         points(c(length(a1)+(length(a2)+1)/2,length(a1)+(length(a2)+1)/2),c(mina2,maxa2),pch=3,cex=1.3)
         points(c((length(b1)+1)/2+sum(data[,(it*2)-1]=="A"),(length(b1)+1)/2+sum(data[,(it*2)-1]=="A")),c(minb1,maxb1),pch=3,cex=1.3)

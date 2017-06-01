@@ -1,5 +1,5 @@
 graph.CL <-
-function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",ylab="Scores",ylim=NULL,legend=NULL){
+function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",ylab="Scores",ylim=NULL,legendxy=NULL,labels=c("A","B","A","B")){
 
   x<-1:nrow(data)
   
@@ -95,18 +95,19 @@ function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Measurement 
       }
       lines(c(1,nrow(data)),c(CLA,CLA),lty=3)
       lines(c(1,nrow(data)),c(CLB,CLB),lty=6)
-      if(is.null(legend))
-        legend(locator(1),lty=c(2,1,3,6),pch=c(1,16,46,46),legend=c("A","B","central tendency A","central tendency B"),cex=0.8)
+      CL_labels<-c(labels[1:2],paste("central tendency",labels[1:2]))
+      if(is.null(legendxy))
+        legend(locator(1),lty=c(2,1,3,6),pch=c(1,16,46,46),legend=CL_labels,cex=0.8)
       else
-        legend(legend[1],y=legend[2],lty=c(2,1,3,6),pch=c(1,16,46,46),legend=c("A","B","central tendency A","central tendency B"),cex=0.8)
+        legend(legendxy[1],y=legendxy[2],lty=c(2,1,3,6),pch=c(1,16,46,46),legend=CL_labels,cex=0.8)
     }
     if(design=="AB"){
       plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
       lines(x[data[,1]=="A"],data[,2][data[,1]=="A"])
       lines(x[data[,1]=="B"],data[,2][data[,1]=="B"])
       lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-      mtext("A",side=3,at=(sum(data[,1]=="A")+1)/2)
-      mtext("B",side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
+      mtext(labels[1],side=3,at=(sum(data[,1]=="A")+1)/2)
+      mtext(labels[2],side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
       lines(c(1,(sum(data[,1]=="A"))),c(CLA,CLA),lty=3)
       lines(c((sum(data[,1]=="A")+1),nrow(data)),c(CLB,CLB),lty=3)
     }
@@ -235,16 +236,16 @@ function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Measurement 
     lines(x[data[,1]=="A2"],data[,2][data[,1]=="A2"])
     lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
     lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-    mtext("A",side=3,at=(sum(data[,1]=="A1")+1)/2)
-    mtext("B",side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
-    mtext("A",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
+    mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
+    mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
+    mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
     lines(c(1,(sum(data[,1]=="A1"))),c(CLA1,CLA1),lty=3)
     lines(c((sum(data[,1]=="A1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1"))),c(CLB1,CLB1),lty=3)
     lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2"))),c(CLA2,CLA2),lty=3)
     if(design=="ABAB"){
       lines(x[data[,1]=="B2"],data[,2][data[,1]=="B2"])
       lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-      mtext("B",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
+      mtext(labels[4],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
       lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+1),nrow(data)),c(CLB2,CLB2),lty=3)
     }
   }  
@@ -331,8 +332,8 @@ function(design,CL,tr,data=read.table(file.choose(new=FALSE)),xlab="Measurement 
       lines(x[data[,(it*2)-1]=="A"],data[,it*2][data[,(it*2)-1]=="A"])
       lines(x[data[,(it*2)-1]=="B"],data[,it*2][data[,(it*2)-1]=="B"])
       lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)
-      mtext("A",side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
-      mtext("B",side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
+      mtext(labels[1],side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
+      mtext(labels[2],side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
       lines(c(1,(sum(data[,(it*2)-1]=="A"))),c(CLA,CLA),lty=3)
       lines(c((sum(data[,(it*2)-1]=="A")+1),nrow(data)),c(CLB,CLB),lty=3)
     }    

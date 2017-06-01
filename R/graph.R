@@ -1,5 +1,5 @@
 graph <-
-function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",ylab="Scores",ylim=NULL,legend=NULL){
+function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",ylab="Scores",ylim=NULL,legendxy=NULL,labels=c("A","B","A","B")){
 
   MT<-nrow(data)
   x<-1:MT
@@ -18,10 +18,10 @@ function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times"
     for(it in 1:(length(b)-1)){
       lines(c(MTB[it],MTB[it+1]),c(b[it],b[it+1]),lty=1)
     }
-    if(is.null(legend))
-      legend(locator(1),lty=c(2,1),pch=c(1,16),legend=c("A","B"))
+    if(is.null(legendxy))
+      legend(locator(1),lty=c(2,1),pch=c(1,16),legend=labels[1:2])
     else
-      legend(legend[1],y=legend[2],lty=c(2,1),pch=c(1,16),legend=c("A","B"))
+      legend(legendxy[1],y=legendxy[2],lty=c(2,1),pch=c(1,16),legend=labels[1:2])
   }
   
   if(design=="AB"){
@@ -29,8 +29,8 @@ function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times"
     lines(x[data[,1]=="A"],data[,2][data[,1]=="A"])
     lines(x[data[,1]=="B"],data[,2][data[,1]=="B"])
     lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-    mtext("A",side=3,at=(sum(data[,1]=="A")+1)/2)
-    mtext("B",side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
+    mtext(labels[1],side=3,at=(sum(data[,1]=="A")+1)/2)
+    mtext(labels[2],side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
   }
   
   
@@ -41,9 +41,9 @@ function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times"
     lines(x[data[,1]=="A2"],data[,2][data[,1]=="A2"])
     lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
     lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-    mtext("A",side=3,at=(sum(data[,1]=="A1")+1)/2)
-    mtext("B",side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
-    mtext("A",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
+    mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
+    mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
+    mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
   }
   
   if(design=="ABAB"){
@@ -55,10 +55,10 @@ function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times"
     lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
     lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
     lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-    mtext("A",side=3,at=(sum(data[,1]=="A1")+1)/2)
-    mtext("B",side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
-    mtext("A",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
-    mtext("B",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
+    mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
+    mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
+    mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
+    mtext(labels[4],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
   }
   
   if(design=="MBD"){
@@ -69,8 +69,8 @@ function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times"
       lines(x[data[,(it*2)-1]=="A"],data[,it*2][data[,(it*2)-1]=="A"])
       lines(x[data[,(it*2)-1]=="B"],data[,it*2][data[,(it*2)-1]=="B"])
       lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)
-      mtext("A",side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
-      mtext("B",side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
+      mtext(labels[1],side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
+      mtext(labels[2],side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
     }
     title(xlab=xlab,pch=16)
     

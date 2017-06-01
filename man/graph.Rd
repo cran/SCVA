@@ -2,13 +2,12 @@
 
 \alias{graph}
 
-
 \title{Graphical representation of single-case data}
 
 \description{The observed single-case data are plotted.}
 
-\usage{graph(design,data=read.table(file.choose(new=FALSE)),
-xlab="Measurement Times",ylab="Scores",ylim=NULL,legend=NULL)}
+\usage{graph(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",
+ylab="Scores",ylim=NULL,legendxy=NULL,labels=c("A","B","A","B"))}
 
 \arguments{
 
@@ -22,7 +21,9 @@ xlab="Measurement Times",ylab="Scores",ylim=NULL,legend=NULL)}
   
   \item{ylim}{Y axis limits in the form \code{c(min, max)}.}
 
-  \item{legend}{Optional legend location x and y coordinates in the form \code{c(x coordinate, y coordinate)}. Only used when design is \code{"CRD"}, \code{"RBD"}, \code{"ATD"} or \code{"Custom"}.}
+  \item{legendxy}{Optional legend location x and y coordinates in the form \code{c(x coordinate, y coordinate)}. Only used when design is \code{"CRD"}, \code{"RBD"}, \code{"ATD"} or \code{"Custom"}.}
+  
+  \item{labels}{Optional labels for treatment levels in the form \code{c("A", "B")}.}
 
 }
 
@@ -43,7 +44,7 @@ Bulte, I., & Onghena, P. (2009). Randomization tests for multiple baseline desig
 
 Bulte, I., & Onghena, P. (2012). When the truth hits you between the eyes: A software tool for the visual analysis of single-case experimental data. Methodology, 8, 104-114.
 
-\url{http://ppw.kuleuven.be/english/research/mesrg}
+\url{http://ppw.kuleuven.be/home/english/research/mesrg}
 
 }
 

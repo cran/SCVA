@@ -37,7 +37,7 @@ When choosing to save these data values to a file (\code{save="yes"}), another w
 
 Bulte, I., & Onghena, P. (2012). When the truth hits you between the eyes: A software tool for the visual analysis of single-case experimental data. Methodology, 8, 104-114.
 
-\url{http://ppw.kuleuven.be/english/research/mesrg}
+\url{http://ppw.kuleuven.be/home/english/research/mesrg}
 
 }
 

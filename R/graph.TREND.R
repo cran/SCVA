@@ -1,5 +1,5 @@
 graph.TREND <-
-function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,ylab=NULL,ylim=NULL,legend=NULL){
+function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,ylab=NULL,ylim=NULL,legendxy=NULL,labels=c("A","B","A","B")){
   
   x<-1:nrow(data)
   MT<-nrow(data)
@@ -99,8 +99,8 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       for(it in 1:length(residualsB)){
         lines(c(length(residualsA)+it,length(residualsA)+it),c(residualsB[it],0))
       }
-      mtext("A",side=3,at=(sum(data[,1]=="A")+1)/2)
-      mtext("B",side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
+      mtext(labels[1],side=3,at=(sum(data[,1]=="A")+1)/2)
+      mtext(labels[2],side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
     }
     if(TREND=="RTL"|TREND=="SM"|TREND=="LSR"|TREND=="RM3"|TREND=="RM5"|TREND=="RM42"){
       if (is.null(xlab)){
@@ -112,8 +112,8 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       if(design=="AB"){
         plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
         lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-        mtext("A",side=3,at=(sum(data[,1]=="A")+1)/2)
-        mtext("B",side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
+        mtext(labels[1],side=3,at=(sum(data[,1]=="A")+1)/2)
+        mtext(labels[2],side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
       }
       if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
         plot(x,data[,2],type="n",xlab=xlab,ylab=ylab,ylim=ylim)
@@ -132,10 +132,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
           lines(c(1,MT),c(interceptLSRa+slopeLSRa,interceptLSRa+slopeLSRa*MT),lty=1)
           lines(c(1,MT),c(interceptLSRb+slopeLSRb,interceptLSRb+slopeLSRb*MT),lty=16)
-          if(is.null(legend))
-            legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","trend line (LSR) A","trend line (LSR) B"),cex=0.8)
+          trend_labels<-c(labels[1:2],paste("trend line (LSR)",labels[1:2]))
+          if(is.null(legendxy))
+            legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=trend_labels,cex=0.8)
           else
-            legend(legend[1],y=legend[2],lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","trend line (LSR) A","trend line (LSR) B"),cex=0.8)
+            legend(legendxy[1],y=legendxy[2],lty=c(0,0,3,6),pch=c(1,16,46,46),legend=trend_labels,cex=0.8)
         }
       }
       if(TREND=="SM"){
@@ -234,10 +235,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
             lines(c(1,MT),c(interceptB1+slopeB1,interceptB1+slopeB1*MT),lty=6)
             lines(c(1,MT),c(interceptB2+slopeB2,interceptB2+slopeB2*MT),lty=6)
           }
-          if(is.null(legend))
-            legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","trend line (split-middle) A","trend line (split-middle) B"),cex=0.8)
+          trend_labels<-c(labels[1:2],paste("trend line (split-middle)",labels[1:2]))
+          if(is.null(legendxy))
+            legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=trend_labels,cex=0.8)
           else
-            legend(legend[1],y=legend[2],lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","trend line (split-middle) A","trend line (split-middle) B"),cex=0.8)
+            legend(legendxy[1],y=legendxy[2],lty=c(0,0,3,6),pch=c(1,16,46,46),legend=trend_labels,cex=0.8)
         }
         if(design=="AB"){
           if(length(A)%%2==0){
@@ -340,10 +342,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         lines(c(medTIMEb1,medTIMEb2),c(medVALUEb1,medVALUEb2),lty=6)
         lines(c(medTIMEb2,medTIMEb3),c(medVALUEb2,medVALUEb3),lty=6)
         if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
-          if(is.null(legend))
-            legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","resistant trend line A","resistant trend line B"),cex=0.8)
+          trend_labels<-c(labels[1:2],paste("resistant trend line",labels[1:2]))
+          if(is.null(legendxy))
+            legend(locator(1),lty=c(0,0,3,6),pch=c(1,16,46,46),legend=trend_labels,cex=0.8)
           else
-            legend(legend[1],y=legend[2],lty=c(0,0,3,6),pch=c(1,16,46,46),legend=c("A","B","resistant trend line A","resistant trend line B"),cex=0.8)
+            legend(legendxy[1],y=legendxy[2],lty=c(0,0,3,6),pch=c(1,16,46,46),legend=trend_labels,cex=0.8)
         }
       }
       if(TREND=="RM3"){
@@ -372,10 +375,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           lines(c(times3B[it],times3B[it+1]),c(RM3b[it],RM3b[it+1]),lty=2)
         }
         if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
-          if(is.null(legend))
-            legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (3) A","running medians (3) B"),cex=0.8)
+          trend_labels<-c(labels[1:2],paste("running medians (3)",labels[1:2]))
+          if(is.null(legendxy))
+            legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=trend_labels,cex=0.8)
           else
-            legend(legend[1],y=legend[2],lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (3) A","running medians (3) B"),cex=0.8)
+            legend(legendxy[1],y=legendxy[2],lty=c(0,0,1,2),pch=c(1,16,3,4),legend=trend_labels,cex=0.8)
         }
       }
       if(TREND=="RM5"){
@@ -404,10 +408,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           lines(c(times5B[it],times5B[it+1]),c(RM5b[it],RM5b[it+1]),lty=2)
         }
         if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
-          if(is.null(legend))
-            legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (5) A","running medians (5) B"),cex=0.8)
+          trend_labels<-c(labels[1:2],paste("running medians (5)",labels[1:2]))
+          if(is.null(legendxy))
+            legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=trend_labels,cex=0.8)
           else
-            legend(legend[1],y=legend[2],lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (5) A","running medians (5) B"),cex=0.8)
+            legend(legendxy[1],y=legendxy[2],lty=c(0,0,1,2),pch=c(1,16,3,4),legend=trend_labels,cex=0.8)
         }
       }
       if(TREND=="RM42"){
@@ -444,10 +449,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           lines(c(times42B[it],times42B[it+1]),c(RM42b[it],RM42b[it+1]),lty=2)
         }
         if(design=="CRD"|design=="ATD"|design=="RBD"|design=="Custom"){
-          if(is.null(legend))
-            legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (42) A","running medians (42) B"),cex=0.8)
+          trend_labels<-c(labels[1:2],paste("running medians (42)",labels[1:2]))
+          if(is.null(legendxy))
+            legend(locator(1),lty=c(0,0,1,2),pch=c(1,16,3,4),legend=trend_labels,cex=0.8)
           else
-            legend(legend[1],y=legend[2],lty=c(0,0,1,2),pch=c(1,16,3,4),legend=c("A","B","running medians (42) A","running medians (42) B"),cex=0.8)
+            legend(legendxy[1],y=legendxy[2],lty=c(0,0,1,2),pch=c(1,16,3,4),legend=trend_labels,cex=0.8)
         }
       }
     }
@@ -594,15 +600,15 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       for(it in 1:length(residualsA2)){
         lines(c(length(residualsA1)+length(residualsB1)+it,length(residualsA1)+length(residualsB1)+it),c(residualsA2[it],0))
       }
-      mtext("A",side=3,at=(sum(data[,1]=="A1")+1)/2)
-      mtext("B",side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
-      mtext("A",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
+      mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
+      mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
+      mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
       if(design=="ABAB"){
         lines(c(length(residualsA1)+length(residualsB1)+length(residualsA2)+1,MT),c(0,0))
         for(it in 1:length(residualsB2)){
           lines(c(length(residualsA1)+length(residualsB1)+length(residualsA2)+it,length(residualsA1)+length(residualsB1)+length(residualsA2)+it),c(residualsB2[it],0))
         }
-        mtext("B",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
+        mtext(labels[4],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
       }
     }
     if(TREND=="RTL"|TREND=="SM"|TREND=="LSR"|TREND=="RM3"|TREND=="RM5"|TREND=="RM42"){
@@ -615,12 +621,12 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
       lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
       lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-      mtext("A",side=3,at=(sum(data[,1]=="A1")+1)/2)
-      mtext("B",side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
-      mtext("A",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
+      mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
+      mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
+      mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
       if(design=="ABAB"){
         lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-        mtext("B",side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
+        mtext(labels[4],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
       }
       if(TREND=="LSR"){
         xa1<-1:length(A1)
@@ -1185,8 +1191,8 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         for(itr in 1:length(residualsB)){
           lines(c(length(residualsA)+itr,length(residualsA)+itr),c(residualsB[itr],0))
         }
-        mtext("A",side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
-        mtext("B",side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
+        mtext(labels[1],side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
+        mtext(labels[2],side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
       }
       if(TREND=="RTL"|TREND=="SM"|TREND=="LSR"|TREND=="RM3"|TREND=="RM5"|TREND=="RM42"){
         if (is.null(xlab)){
@@ -1197,8 +1203,8 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
         plot(x,data[,it*2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
         lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)
-        mtext("A",side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
-        mtext("B",side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
+        mtext(labels[1],side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
+        mtext(labels[2],side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
         if(TREND=="LSR"){
           xa<-1:length(A)
           interceptLSRa<-coefficients(lm(A~xa))[1]
