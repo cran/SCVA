@@ -11,8 +11,8 @@ Make graphical representations of single case data and transform graphical displ
 \tabular{ll}{
 Package: \tab SCVA\cr
 Type: \tab Package\cr
-Version: \tab 1.2.1\cr
-Date: \tab 2017-05-31\cr
+Version: \tab 1.3.0\cr
+Date: \tab 2019-07-01\cr
 License: \tab GPL version 2 or newer\cr
 }
 }

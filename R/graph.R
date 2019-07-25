@@ -28,7 +28,7 @@ function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times"
     plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
     lines(x[data[,1]=="A"],data[,2][data[,1]=="A"])
     lines(x[data[,1]=="B"],data[,2][data[,1]=="B"])
-    lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
+    lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
     mtext(labels[1],side=3,at=(sum(data[,1]=="A")+1)/2)
     mtext(labels[2],side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
   }
@@ -39,8 +39,9 @@ function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times"
     lines(x[data[,1]=="A1"],data[,2][data[,1]=="A1"])
     lines(x[data[,1]=="B1"],data[,2][data[,1]=="B1"])
     lines(x[data[,1]=="A2"],data[,2][data[,1]=="A2"])
-    lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-    lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
+    lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
+    lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),
+          c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
     mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
     mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
     mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
@@ -52,9 +53,11 @@ function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times"
     lines(x[data[,1]=="B1"],data[,2][data[,1]=="B1"])
     lines(x[data[,1]=="A2"],data[,2][data[,1]=="A2"])
     lines(x[data[,1]=="B2"],data[,2][data[,1]=="B2"])
-    lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-    lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-    lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
+    lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
+    lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),
+          c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
+    lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),
+          c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
     mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
     mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
     mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
@@ -68,7 +71,8 @@ function(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times"
       plot(x,data[,it*2],xlab="",ylab=ylab,ylim=ylim,pch=16)
       lines(x[data[,(it*2)-1]=="A"],data[,it*2][data[,(it*2)-1]=="A"])
       lines(x[data[,(it*2)-1]=="B"],data[,it*2][data[,(it*2)-1]=="B"])
-      lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)
+      lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),
+            c(min(data[,it*2],ylim[1],na.rm=TRUE)-5,max(data[,it*2],ylim[2],na.rm=TRUE)+5),lty=2)
       mtext(labels[1],side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
       mtext(labels[2],side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
     }

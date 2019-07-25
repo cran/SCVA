@@ -1,13 +1,13 @@
-\name{graph}
+\name{graphly}
 
-\alias{graph}
+\alias{graphly}
 
-\title{Graphical representation of single-case data}
+\title{Interactive plot of single-case data}
 
-\description{The observed single-case data are plotted.}
+\description{The observed single-case data are plotted using plotly, a web-based interactive charting library.}
 
-\usage{graph(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",
-ylab="Scores",ylim=NULL,legendxy=NULL,labels=c("A","B","A","B"))}
+\usage{graphly(design,data=read.table(file.choose(new=FALSE)),xlab="Measurement Times",
+ylab="Scores",ylim=NULL,labels=c("A","B","A","B"))}
 
 \arguments{
 
@@ -21,8 +21,6 @@ ylab="Scores",ylim=NULL,legendxy=NULL,labels=c("A","B","A","B"))}
   
   \item{ylim}{Y axis limits in the form \code{c(min, max)}.}
 
-  \item{legendxy}{Optional legend location x and y coordinates in the form \code{c(x coordinate, y coordinate)}. Only used when design is \code{"CRD"}, \code{"RBD"}, \code{"ATD"} or \code{"Custom"}.}
-  
   \item{labels}{Optional labels for treatment levels in the form \code{c("A", "B")}.}
 
 }
@@ -32,8 +30,6 @@ ylab="Scores",ylim=NULL,legendxy=NULL,labels=c("A","B","A","B"))}
 When using the default \code{data} argument, a window will pop up to ask in what file the data can be found. This text file containing the data should consist of two columns for single-case phase and alternation designs: the first with the condition labels and the second with the obtained scores. For multiple-baseline designs it should consist of these two columns for EACH unit. This way, each row represents one measurement occasion. It is important not to label the rows or columns.
 
 Missing data should be indicated as \code{NA}. For calculations, missing data are omitted.
-
-For alternation designs, after the plot is drawn, the location of the legend should be indicated by a left mouse click.
 
 }
 
@@ -47,9 +43,13 @@ Bulte, I., & Onghena, P. (2012). When the truth hits you between the eyes: A sof
 
 \url{http://ppw.kuleuven.be/home/english/research/mesrg}
 
+\url{https://plotly-r.com/overview.html}
+
 }
 
 \seealso{
+
+\code{\link{graph}} to simply plot raw single-case data.
 
 \code{\link{graph.CL}} to plot a measure of central tendency as a line parallel to the abscissa.
 
@@ -57,13 +57,11 @@ Bulte, I., & Onghena, P. (2012). When the truth hits you between the eyes: A sof
 
 \code{\link{graph.TREND}} to display a possible trend in the data.
 
-\code{\link{graphly}} to display an interactive plot.
-
 }
 
 \examples{
 data(AB)
-graph(design = "AB", data = AB)}
+graphly(design = "AB", data = AB)}
 
 \keyword{Single-case design}
 \keyword{Graph}

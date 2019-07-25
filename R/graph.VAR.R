@@ -52,10 +52,10 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           for(it in 1:(length(b)-1)){
             lines(c(MTB[it],MTB[it+1]),c(b[it],b[it+1]),lty=1)
           }
-          lines(c(1,MT),c(min(A),min(A)),lty=3)
-          lines(c(1,MT),c(max(A),max(A)),lty=3)
-          lines(c(1,MT),c(min(B),min(B)),lty=6)
-          lines(c(1,MT),c(max(B),max(B)),lty=6)
+          lines(c(1,MT),c(min(A,na.rm=TRUE),min(A,na.rm=TRUE)),lty=3)
+          lines(c(1,MT),c(max(A,na.rm=TRUE),max(A,na.rm=TRUE)),lty=3)
+          lines(c(1,MT),c(min(B,na.rm=TRUE),min(B,na.rm=TRUE)),lty=6)
+          lines(c(1,MT),c(max(B,na.rm=TRUE),max(B,na.rm=TRUE)),lty=6)
           var_labels<-c(labels[1:2],paste("range lines",labels[1:2]))
           if(is.null(legendxy))
             legend(locator(1),lty=c(2,1,3,6),pch=c(1,16,46,46),legend=var_labels,cex=0.8)
@@ -66,13 +66,13 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
           lines(x[data[,1]=="A"],data[,2][data[,1]=="A"])
           lines(x[data[,1]=="B"],data[,2][data[,1]=="B"])
-          lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
+          lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
           mtext(labels[1],side=3,at=(sum(data[,1]=="A")+1)/2)
           mtext(labels[2],side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
-          lines(c(1,(sum(data[,1]=="A"))),c(min(A),min(A)),lty=3)
-          lines(c(1,(sum(data[,1]=="A"))),c(max(A),max(A)),lty=3)
-          lines(c((sum(data[,1]=="A")+1),MT),c(min(B),min(B)),lty=3)
-          lines(c((sum(data[,1]=="A")+1),MT),c(max(B),max(B)),lty=3)
+          lines(c(1,(sum(data[,1]=="A"))),c(min(A,na.rm=TRUE),min(A,na.rm=TRUE)),lty=3)
+          lines(c(1,(sum(data[,1]=="A"))),c(max(A,na.rm=TRUE),max(A,na.rm=TRUE)),lty=3)
+          lines(c((sum(data[,1]=="A")+1),MT),c(min(B,na.rm=TRUE),min(B,na.rm=TRUE)),lty=3)
+          lines(c((sum(data[,1]=="A")+1),MT),c(max(B,na.rm=TRUE),max(B,na.rm=TRUE)),lty=3)
         }
       }
       if(VAR=="RB"){
@@ -85,8 +85,8 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
         plot(x,data[,2],type="n",xlab=xlab,ylab=ylab,ylim=ylim,xaxt="n")
         mtext(labels[1],side=1,at=MT/4)
         mtext(labels[2],side=1,at=MT*3/4)
-        lines(c(MT/4,MT/4),c(min(A),max(A)))
-        lines(c(MT*3/4,MT*3/4),c(min(B),max(B)))
+        lines(c(MT/4,MT/4),c(min(A,na.rm=TRUE),max(A,na.rm=TRUE)))
+        lines(c(MT*3/4,MT*3/4),c(min(B,na.rm=TRUE),max(B,na.rm=TRUE)))
         if(dataset=="trimmed"){
           if(6<=(sum(data[,1]=="A"))&(sum(data[,1]=="A"))<=12){
             points(MT/4,sort(data[,2][data[,1]=="A"])[1],pch=16)
@@ -110,18 +110,18 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           }
         }
         if(CL=="mean"){
-          CLA<-mean(A)
-          CLB<-mean(B)
+          CLA<-mean(A,na.rm=TRUE)
+          CLB<-mean(B,na.rm=TRUE)
         }
         if(CL=="median"){
-          CLA<-median(A)
-          CLB<-median(B)
+          CLA<-median(A,na.rm=TRUE)
+          CLB<-median(B,na.rm=TRUE)
         }
         if(CL=="bmed"){
           aa<-sort(A)
           bb<-sort(B)
           if(length(aa)<5){
-            CLA<-median(A)
+            CLA<-median(A,na.rm=TRUE)
           }
           if(length(aa)==5|length(aa)==7|length(aa)==9|length(aa)==11){
             CLA<-(aa[ceiling(length(aa)/2)-1]+aa[ceiling(length(aa)/2)]+aa[ceiling(length(aa)/2)+1])/3
@@ -136,7 +136,7 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
             CLA<-1/10*aa[length(aa)/2-2]+1/5*aa[length(aa)/2-1]+1/5*aa[length(aa)/2]+1/5*aa[length(aa)/2+1]+1/5*aa[length(aa)/2+2]+1/10*aa[length(aa)/2+3]
           }
           if(length(bb)<5){
-            CLB<-median(B)
+            CLB<-median(B,na.rm=TRUE)
           }
           if(length(bb)==5|length(bb)==7|length(bb)==9|length(bb)==11){
             CLB<-(bb[ceiling(length(bb)/2)-1]+bb[ceiling(length(bb)/2)]+bb[ceiling(length(bb)/2)+1])/3
@@ -152,16 +152,17 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           }
         }  
         if(CL=="trimmean"){
-          CLA<-mean(A,trim=tr)	
-          CLB<-mean(B,trim=tr)
+          CLA<-mean(A,trim=tr,na.rm=TRUE)	
+          CLB<-mean(B,trim=tr,na.rm=TRUE)
         }  
         if(CL=="mest"){
           hpsi<-function(x,bend=1.28){
             hpsi<-ifelse(abs(x)<=bend,x,bend*sign(x))
             hpsi
           }
-          mest<-function(x,bend=1.28,na.rm=F){
+          mest<-function(x,bend=1.28,na.rm=TRUE){
             if(na.rm)x<-x[!is.na(x)]
+            if(length(x)==0) return(NA)
             if(mad(x)==0)stop("MAD=0. The M-estimator cannot be computed.")
             y<-(x-median(x))/mad(x)
             A<-sum(hpsi(y,bend))
@@ -199,14 +200,14 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
       b1<-B[1:ceiling(length(B)/2)]
       b2<-B[(ceiling(length(B)/2)+1):length(B)]
       if(dataset=="regular"){
-        mina1<-min(a1)
-        mina2<-min(a2)
-        minb1<-min(b1)
-        minb2<-min(b2)
-        maxa1<-max(a1)
-        maxa2<-max(a2)
-        maxb1<-max(b1)
-        maxb2<-max(b2)
+        mina1<-min(a1,na.rm=TRUE)
+        mina2<-min(a2,na.rm=TRUE)
+        minb1<-min(b1,na.rm=TRUE)
+        minb2<-min(b2,na.rm=TRUE)
+        maxa1<-max(a1,na.rm=TRUE)
+        maxa2<-max(a2,na.rm=TRUE)
+        maxb1<-max(b1,na.rm=TRUE)
+        maxb2<-max(b2,na.rm=TRUE)
       }
       if(dataset=="trimmed"){
         if(length(a1)<6|length(a1)>16){
@@ -245,14 +246,14 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
         if(12<length(b2)&length(b2)<=16){
           bb2<-sort(b2)[3:(length(b2)-2)] 
         }
-        mina1<-min(aa1)
-        mina2<-min(aa2)
-        minb1<-min(bb1)
-        minb2<-min(bb2)
-        maxa1<-max(aa1)
-        maxa2<-max(aa2)
-        maxb1<-max(bb1)
-        maxb2<-max(bb2)
+        mina1<-min(aa1,na.rm=TRUE)
+        mina2<-min(aa2,na.rm=TRUE)
+        minb1<-min(bb1,na.rm=TRUE)
+        minb2<-min(bb2,na.rm=TRUE)
+        maxa1<-max(aa1,na.rm=TRUE)
+        maxa2<-max(aa2,na.rm=TRUE)
+        maxb1<-max(bb1,na.rm=TRUE)
+        maxb2<-max(bb2,na.rm=TRUE)
       }
       minimaA<-c(mina1,mina2)
       maximaA<-c(maxa1,maxa2)
@@ -260,7 +261,7 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
       maximaB<-c(maxb1,maxb2)
       if(design=="AB"){
         plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
-        lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
+        lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
         mtext(labels[1],side=3,at=(sum(data[,1]=="A")+1)/2)
         mtext(labels[2],side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
         points(c((length(a1)+1)/2,(length(a1)+1)/2),c(mina1,maxa1),pch=3,cex=1.3)
@@ -366,23 +367,27 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
         lines(x[data[,1]=="A1"],data[,2][data[,1]=="A1"])
         lines(x[data[,1]=="B1"],data[,2][data[,1]=="B1"])
         lines(x[data[,1]=="A2"],data[,2][data[,1]=="A2"])
-        lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-        lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
+        lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
+        lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),
+              c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
         mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
         mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
         mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
         lines(c(1,(sum(data[,1]=="A1"))),c(min(A1),min(A1)),lty=3)
         lines(c(1,(sum(data[,1]=="A1"))),c(max(A1),max(A1)),lty=3)
-        lines(c((sum(data[,1]=="A1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1"))),c(min(B1),min(B1)),lty=3)
-        lines(c((sum(data[,1]=="A1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1"))),c(max(B1),max(B1)),lty=3)
-        lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2"))),c(min(A2),min(A2)),lty=3)
-        lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2"))),c(max(A2),max(A2)),lty=3)
+        lines(c((sum(data[,1]=="A1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1"))),c(min(B1,na.rm=TRUE),min(B1,na.rm=TRUE)),lty=3)
+        lines(c((sum(data[,1]=="A1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1"))),c(max(B1,na.rm=TRUE),max(B1,na.rm=TRUE)),lty=3)
+        lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2"))),
+              c(min(A2,na.rm=TRUE),min(A2,na.rm=TRUE)),lty=3)
+        lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+1),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2"))),
+              c(max(A2,na.rm=TRUE),max(A2,na.rm=TRUE)),lty=3)
         if(design=="ABAB"){
           lines(x[data[,1]=="B2"],data[,2][data[,1]=="B2"])
           mtext(labels[4],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
-          lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-          lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+1),nrow(data)),c(min(B2),min(B2)),lty=3)
-          lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+1),nrow(data)),c(max(B2),max(B2)),lty=3)
+          lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),
+                c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
+          lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+1),nrow(data)),c(min(B2,na.rm=TRUE),min(B2,na.rm=TRUE)),lty=3)
+          lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+1),nrow(data)),c(max(B2,na.rm=TRUE),max(B2,na.rm=TRUE)),lty=3)
         }
       }
       if(VAR=="RB"){
@@ -393,16 +398,16 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           ylab="Scores"
         }
         if(CL=="mean"){
-          CLA1<-mean(A1)
-          CLB1<-mean(B1)
-          CLA2<-mean(A2)
-          CLB2<-mean(B2)
+          CLA1<-mean(A1,na.rm=TRUE)
+          CLB1<-mean(B1,na.rm=TRUE)
+          CLA2<-mean(A2,na.rm=TRUE)
+          CLB2<-mean(B2,na.rm=TRUE)
         }
         if(CL=="median"){
-          CLA1<-median(A1)
-          CLB1<-median(B1)
-          CLA2<-median(A2)
-          CLB2<-median(B2)
+          CLA1<-median(A1,na.rm=TRUE)
+          CLB1<-median(B1,na.rm=TRUE)
+          CLA2<-median(A2,na.rm=TRUE)
+          CLB2<-median(B2,na.rm=TRUE)
         }
         if(CL=="bmed"){
           aa1<-sort(A1)
@@ -410,7 +415,7 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           aa2<-sort(A2)
           bb2<-sort(B2)
           if(length(aa1)<5){
-            CLA1<-median(data[,2][data[,1]=="A1"])
+            CLA1<-median(data[,2][data[,1]=="A1"],na.rm=TRUE)
           }
           if(length(aa1)==5|length(aa1)==7|length(aa1)==9|length(aa1)==11){
             CLA1<-(aa1[ceiling(length(aa1)/2)-1]+aa1[ceiling(length(aa1)/2)]+aa1[ceiling(length(aa1)/2)+1])/3
@@ -425,7 +430,7 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
             CLA1<-1/10*aa1[length(aa1)/2-2]+1/5*aa1[length(aa1)/2-1]+1/5*aa1[length(aa1)/2]+1/5*aa1[length(aa1)/2+1]+1/5*aa1[length(aa1)/2+2]+1/10*aa1[length(aa1)/2+3]
           }
           if(length(bb1)<5){
-            CLB1<-median(data[,2][data[,1]=="B1"])
+            CLB1<-median(data[,2][data[,1]=="B1"],na.rm=TRUE)
           }
           if(length(bb1)==5|length(bb1)==7|length(bb1)==9|length(bb1)==11){
             CLB1<-(bb1[ceiling(length(bb1)/2)-1]+bb1[ceiling(length(bb1)/2)]+bb1[ceiling(length(bb1)/2)+1])/3
@@ -440,7 +445,7 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
             CLB1<-1/10*bb1[length(bb1)/2-2]+1/5*bb1[length(bb1)/2-1]+1/5*bb1[length(bb1)/2]+1/5*bb1[length(bb1)/2+1]+1/5*bb1[length(bb1)/2+2]+1/10*bb1[length(bb1)/2+3]
           }
           if(length(aa2)<5){
-            CLA2<-median(data[,2][data[,1]=="A2"])
+            CLA2<-median(data[,2][data[,1]=="A2"],na.rm=TRUE)
           }
           if(length(aa2)==5|length(aa2)==7|length(aa2)==9|length(aa2)==11){
             CLA2<-(aa2[ceiling(length(aa2)/2)-1]+aa2[ceiling(length(aa2)/2)]+aa2[ceiling(length(aa2)/2)+1])/3
@@ -455,7 +460,7 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
             CLA2<-1/10*aa2[length(aa2)/2-2]+1/5*aa2[length(aa2)/2-1]+1/5*aa2[length(aa2)/2]+1/5*aa2[length(aa2)/2+1]+1/5*aa2[length(aa2)/2+2]+1/10*aa2[length(aa2)/2+3]
           }
           if(length(bb2)<5){
-            CLB2<-median(data[,2][data[,1]=="B2"])
+            CLB2<-median(data[,2][data[,1]=="B2"],na.rm=TRUE)
           }
           if(length(bb2)==5|length(bb2)==7|length(bb2)==9|length(bb2)==11){
             CLB2<-(bb2[ceiling(length(bb2)/2)-1]+bb2[ceiling(length(bb2)/2)]+bb2[ceiling(length(bb2)/2)+1])/3
@@ -471,18 +476,19 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           }
         }
         if(CL=="trimmean"){
-          CLA1<-mean(A1,trim=tr)
-          CLB1<-mean(B1,trim=tr)
-          CLA2<-mean(A2,trim=tr)
-          CLB2<-mean(B2,trim=tr)
+          CLA1<-mean(A1,trim=tr,na.rm=TRUE)
+          CLB1<-mean(B1,trim=tr,na.rm=TRUE)
+          CLA2<-mean(A2,trim=tr,na.rm=TRUE)
+          CLB2<-mean(B2,trim=tr,na.rm=TRUE)
         }
         if(CL=="mest"){
           hpsi<-function(x,bend=1.28){
             hpsi<-ifelse(abs(x)<=bend,x,bend*sign(x))
             hpsi
           }
-          mest<-function(x,bend=1.28,na.rm=F){
+          mest<-function(x,bend=1.28,na.rm=TRUE){
             if(na.rm)x<-x[!is.na(x)]
+            if(length(x)==0) return(NA)
             if(mad(x)==0)stop("MAD=0. The M-estimator cannot be computed.")
             y<-(x-median(x))/mad(x)
             A<-sum(hpsi(y,bend))
@@ -507,15 +513,16 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
         mtext(labels[1],side=1,at=(sum(data[,1]=="A1")+1)/2)
         mtext(labels[2],side=1,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
         mtext(labels[3],side=1,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
-        lines(c((sum(data[,1]=="A1")+1)/2,(sum(data[,1]=="A1")+1)/2),c(min(A1),max(A1)))
-        lines(c((sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2),(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2)),c(min(B1),max(B1)))
-        lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2)),c(min(A2),max(A2)))
+        lines(c((sum(data[,1]=="A1")+1)/2,(sum(data[,1]=="A1")+1)/2),c(min(A1,na.rm=TRUE),max(A1,na.rm=TRUE)))
+        lines(c((sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2),(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2)),c(min(B1,na.rm=TRUE),max(B1,na.rm=TRUE)))
+        lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2)),c(min(A2,na.rm=TRUE),max(A2,na.rm=TRUE)))
         lines(c(((sum(data[,1]=="A1")+1)/2)-MT/40,((sum(data[,1]=="A1")+1)/2)+MT/40),c(CLA1,CLA1))
         lines(c(((sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))-MT/40,((sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))+MT/40),c(CLB1,CLB1))
         lines(c(((sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))-MT/40,((sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))+MT/40),c(CLA2,CLA2))
         if(design=="ABAB"){
           mtext(labels[4],side=1,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
-          lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2)),c(min(A2),max(A2)))
+          lines(c((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2),(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2)),
+                c(min(B2,na.rm=TRUE),max(B2,na.rm=TRUE)))
           lines(c(((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))-MT/40,((sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))+MT/40),c(CLB2,CLB2))
         }
         if(dataset=="trimmed"){
@@ -578,22 +585,22 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
       b21<-B2[1:ceiling(length(B2)/2)]
       b22<-B2[(ceiling(length(B2)/2)+1):length(B2)]
       if(dataset=="regular"){
-        mina11<-min(a11)
-        maxa11<-max(a11)
-        mina12<-min(a12)
-        maxa12<-max(a12)
-        minb11<-min(b11)
-        maxb11<-max(b11)
-        minb12<-min(b12)
-        maxb12<-max(b12)
-        mina21<-min(a21)
-        maxa21<-max(a21)
-        mina22<-min(a22)
-        maxa22<-max(a22)
-        minb21<-min(b21)
-        maxb21<-max(b21)
-        minb22<-min(b22)
-        maxb22<-max(b22)
+        mina11<-min(a11,na.rm=TRUE)
+        maxa11<-max(a11,na.rm=TRUE)
+        mina12<-min(a12,na.rm=TRUE)
+        maxa12<-max(a12,na.rm=TRUE)
+        minb11<-min(b11,na.rm=TRUE)
+        maxb11<-max(b11,na.rm=TRUE)
+        minb12<-min(b12,na.rm=TRUE)
+        maxb12<-max(b12,na.rm=TRUE)
+        mina21<-min(a21,na.rm=TRUE)
+        maxa21<-max(a21,na.rm=TRUE)
+        mina22<-min(a22,na.rm=TRUE)
+        maxa22<-max(a22,na.rm=TRUE)
+        minb21<-min(b21,na.rm=TRUE)
+        maxb21<-max(b21,na.rm=TRUE)
+        minb22<-min(b22,na.rm=TRUE)
+        maxb22<-max(b22,na.rm=TRUE)
       }
       if(dataset=="trimmed"){
         if(length(a11)<6|length(a11)>16){	
@@ -668,22 +675,22 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
         if(12<length(b22)&length(b22)<=16){
           bb22<-sort(b22)[3:(length(b22)-2)] 
         }
-        mina11<-min(aa11)
-        maxa11<-max(aa11)
-        mina12<-min(aa12)
-        maxa12<-max(aa12)
-        minb11<-min(bb11)
-        maxb11<-max(bb11)
-        minb12<-min(bb12)
-        maxb12<-max(bb12)
-        mina21<-min(aa21)
-        maxa21<-max(aa21)
-        mina22<-min(aa22)
-        maxa22<-max(aa22)
-        minb21<-min(bb21)
-        maxb21<-max(bb21)
-        minb22<-min(bb22)
-        maxb22<-max(bb22)
+        mina11<-min(aa11,na.rm=TRUE)
+        maxa11<-max(aa11,na.rm=TRUE)
+        mina12<-min(aa12,na.rm=TRUE)
+        maxa12<-max(aa12,na.rm=TRUE)
+        minb11<-min(bb11,na.rm=TRUE)
+        maxb11<-max(bb11,na.rm=TRUE)
+        minb12<-min(bb12,na.rm=TRUE)
+        maxb12<-max(bb12,na.rm=TRUE)
+        mina21<-min(aa21,na.rm=TRUE)
+        maxa21<-max(aa21,na.rm=TRUE)
+        mina22<-min(aa22,na.rm=TRUE)
+        maxa22<-max(aa22,na.rm=TRUE)
+        minb21<-min(bb21,na.rm=TRUE)
+        maxb21<-max(bb21,na.rm=TRUE)
+        minb22<-min(bb22,na.rm=TRUE)
+        maxb22<-max(bb22,na.rm=TRUE)
       }
       if (is.null(xlab)){
         xlab="Measurement Times"
@@ -700,8 +707,9 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
       minimaB2<-c(minb21,minb22)
       maximaB2<-c(maxb21,maxb22)
       plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
-      lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-      lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
+      lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
+      lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),
+            c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
       mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
       mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
       mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
@@ -733,7 +741,8 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
       slopeMAXA2<-coefficients(lm(maximaA2~timeA2))[2]
       lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+1,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")),c(interceptMAXA2+slopeMAXA2,interceptMAXA2+slopeMAXA2*sum(data[,1]=="A2")),lty=3)
       if(design=="ABAB"){
-        lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
+        lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),
+              c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
         mtext(labels[4],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
         points(c((length(b21)+1)/2+sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2"),(length(b21)+1)/2+sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")),c(minb21,maxb21),pch=3,cex=1.3)
         points(c(length(b21)+(length(b22)+1)/2+sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2"),length(b21)+(length(b22)+1)/2+sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")),c(minb22,maxb22),pch=3,cex=1.3)
@@ -787,13 +796,14 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           plot(x,data[,it*2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
           lines(x[data[,(it*2)-1]=="A"],data[,it*2][data[,(it*2)-1]=="A"])
           lines(x[data[,(it*2)-1]=="B"],data[,it*2][data[,(it*2)-1]=="B"])
-          lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)
+          lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),
+                c(min(data[,it*2],ylim[1],na.rm=TRUE)-5,max(data[,it*2],ylim[2],na.rm=TRUE)+5),lty=2)
           mtext(labels[1],side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
           mtext(labels[2],side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
-          lines(c(1,(sum(data[,(it*2)-1]=="A"))),c(min(A),min(A)),lty=3)
-          lines(c(1,(sum(data[,(it*2)-1]=="A"))),c(max(A),max(A)),lty=3)
-          lines(c((sum(data[,(it*2)-1]=="A")+1),MT),c(min(B),min(B)),lty=3)
-          lines(c((sum(data[,(it*2)-1]=="A")+1),MT),c(max(B),max(B)),lty=3)
+          lines(c(1,(sum(data[,(it*2)-1]=="A"))),c(min(A,na.rm=TRUE),min(A,na.rm=TRUE)),lty=3)
+          lines(c(1,(sum(data[,(it*2)-1]=="A"))),c(max(A,na.rm=TRUE),max(A,na.rm=TRUE)),lty=3)
+          lines(c((sum(data[,(it*2)-1]=="A")+1),MT),c(min(B,na.rm=TRUE),min(B,na.rm=TRUE)),lty=3)
+          lines(c((sum(data[,(it*2)-1]=="A")+1),MT),c(max(B,na.rm=TRUE),max(B,na.rm=TRUE)),lty=3)
         }
         if(VAR=="RB"){
           if (is.null(xlab)){
@@ -805,8 +815,8 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           plot(x,data[,it*2],type="n",xlab=xlab,ylab=ylab,ylim=ylim,xaxt="n")
           mtext(labels[1],side=1,at=MT/4)
           mtext(labels[2],side=1,at=MT*3/4)
-          lines(c(MT/4,MT/4),c(min(A),max(A)))
-          lines(c(MT*3/4,MT*3/4),c(min(B),max(B)))
+          lines(c(MT/4,MT/4),c(min(A,na.rm=TRUE),max(A,na.rm=TRUE)))
+          lines(c(MT*3/4,MT*3/4),c(min(B,na.rm=TRUE),max(B,na.rm=TRUE)))
           if(dataset=="trimmed"){
             if(6<=(sum(data[,(it*2)-1]=="A"))&(sum(data[,(it*2)-1]=="A"))<=12){
               points(MT/4,sort(data[,it*2][data[,(it*2)-1]=="A"])[1],pch=16)
@@ -830,18 +840,18 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
             }
           }
           if(CL=="mean"){
-            CLA<-mean(A)
-            CLB<-mean(B)
+            CLA<-mean(A,na.rm=TRUE)
+            CLB<-mean(B,na.rm=TRUE)
           }
           if(CL=="median"){
-            CLA<-median(A)
-            CLB<-median(B)
+            CLA<-median(A,na.rm=TRUE)
+            CLB<-median(B,na.rm=TRUE)
           }
           if(CL=="bmed"){
             aa<-sort(A)
             bb<-sort(B)
             if(length(aa)<5){
-              CLA<-median(A)
+              CLA<-median(A,na.rm=TRUE)
             }
             if(length(aa)==5|length(aa)==7|length(aa)==9|length(aa)==11){
               CLA<-(aa[ceiling(length(aa)/2)-1]+aa[ceiling(length(aa)/2)]+aa[ceiling(length(aa)/2)+1])/3
@@ -856,7 +866,7 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
               CLA<-1/10*aa[length(aa)/2-2]+1/5*aa[length(aa)/2-1]+1/5*aa[length(aa)/2]+1/5*aa[length(aa)/2+1]+1/5*aa[length(aa)/2+2]+1/10*aa[length(aa)/2+3]
             }
             if(length(bb)<5){
-              CLB<-median(B)
+              CLB<-median(B,na.rm=TRUE)
             }
             if(length(bb)==5|length(bb)==7|length(bb)==9|length(bb)==11){
               CLB<-(bb[ceiling(length(bb)/2)-1]+bb[ceiling(length(bb)/2)]+bb[ceiling(length(bb)/2)+1])/3
@@ -872,16 +882,17 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
             }
           }  
           if(CL=="trimmean"){
-            CLA<-mean(A,trim=tr)	
-            CLB<-mean(B,trim=tr)
+            CLA<-mean(A,trim=tr,na.rm=TRUE)	
+            CLB<-mean(B,trim=tr,na.rm=TRUE)
           }
           if(CL=="mest"){
             hpsi<-function(x,bend=1.28){
               hpsi<-ifelse(abs(x)<=bend,x,bend*sign(x))
               hpsi
             }
-            mest<-function(x,bend=1.28,na.rm=F){
+            mest<-function(x,bend=1.28,na.rm=TRUE){
               if(na.rm)x<-x[!is.na(x)]
+              if(length(x)==0) return(NA)
               if(mad(x)==0)stop("MAD=0. The M-estimator cannot be computed.")
               y<-(x-median(x))/mad(x)
               A<-sum(hpsi(y,bend))
@@ -912,14 +923,14 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
         b1<-B[1:ceiling(length(B)/2)]
         b2<-B[(ceiling(length(B)/2)+1):length(B)]
         if(dataset=="regular"){
-          mina1<-min(a1)
-          mina2<-min(a2)
-          minb1<-min(b1)
-          minb2<-min(b2)
-          maxa1<-max(a1)
-          maxa2<-max(a2)
-          maxb1<-max(b1)
-          maxb2<-max(b2)
+          mina1<-min(a1,na.rm=TRUE)
+          mina2<-min(a2,na.rm=TRUE)
+          minb1<-min(b1,na.rm=TRUE)
+          minb2<-min(b2,na.rm=TRUE)
+          maxa1<-max(a1,na.rm=TRUE)
+          maxa2<-max(a2,na.rm=TRUE)
+          maxb1<-max(b1,na.rm=TRUE)
+          maxb2<-max(b2,na.rm=TRUE)
         }
         if(dataset=="trimmed"){
           if(length(a1)<6|length(a1)>16){
@@ -958,14 +969,14 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           if(12<length(b2)&length(b2)<=16){
             bb2<-sort(b2)[3:(length(b2)-2)] 
           }
-          mina1<-min(aa1)
-          mina2<-min(aa2)
-          minb1<-min(bb1)
-          minb2<-min(bb2)
-          maxa1<-max(aa1)
-          maxa2<-max(aa2)
-          maxb1<-max(bb1)
-          maxb2<-max(bb2)
+          mina1<-min(aa1,na.rm=TRUE)
+          mina2<-min(aa2,na.rm=TRUE)
+          minb1<-min(bb1,na.rm=TRUE)
+          minb2<-min(bb2,na.rm=TRUE)
+          maxa1<-max(aa1,na.rm=TRUE)
+          maxa2<-max(aa2,na.rm=TRUE)
+          maxb1<-max(bb1,na.rm=TRUE)
+          maxb2<-max(bb2,na.rm=TRUE)
         }
         minimaA<-c(mina1,mina2)
         maximaA<-c(maxa1,maxa2)
@@ -978,7 +989,8 @@ function(design,VAR,dataset="regular",CL,tr,data=read.table(file.choose(new=FALS
           ylab="Scores"
         }
         plot(x,data[,it*2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
-        lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)	
+        lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),
+              c(min(data[,it*2],ylim[1],na.rm=TRUE)-5,max(data[,it*2],ylim[2],na.rm=TRUE)+5),lty=2)	
         mtext(labels[1],side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)	
         mtext(labels[2],side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
         points(c((length(a1)+1)/2,(length(a1)+1)/2),c(mina1,maxa1),pch=3,cex=1.3)

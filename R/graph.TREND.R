@@ -11,18 +11,18 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
     MTB<-x[data[,1]=="B"]
     if(TREND=="VLP"){
       if(CL=="mean"){
-        CLA<-mean(A)
-        CLB<-mean(B)
+        CLA<-mean(A,na.rm=TRUE)
+        CLB<-mean(B,na.rm=TRUE)
       }
       if(CL=="median"){
-        CLA<-median(A)
-        CLB<-median(B)
+        CLA<-median(A,na.rm=TRUE)
+        CLB<-median(B,na.rm=TRUE)
       }
       if(CL=="bmed"){
         aa<-sort(A)
         bb<-sort(B)
         if(length(aa)<5){
-          CLA<-median(A)
+          CLA<-median(A,na.rm=TRUE)
         }
         if(length(aa)==5|length(aa)==7|length(aa)==9|length(aa)==11){
           CLA<-(aa[ceiling(length(aa)/2)-1]+aa[ceiling(length(aa)/2)]+aa[ceiling(length(aa)/2)+1])/3
@@ -37,7 +37,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           CLA<-1/10*aa[length(aa)/2-2]+1/5*aa[length(aa)/2-1]+1/5*aa[length(aa)/2]+1/5*aa[length(aa)/2+1]+1/5*aa[length(aa)/2+2]+1/10*aa[length(aa)/2+3]
         }
         if(length(bb)<5){
-          CLB<-median(B)
+          CLB<-median(B,na.rm=TRUE)
         }
         if(length(bb)==5|length(bb)==7|length(bb)==9|length(bb)==11){
           CLB<-(bb[ceiling(length(bb)/2)-1]+bb[ceiling(length(bb)/2)]+bb[ceiling(length(bb)/2)+1])/3
@@ -53,16 +53,17 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
       } 
       if(CL=="trimmean"){
-        CLA<-mean(A,trim=tr)	
-        CLB<-mean(B,trim=tr)
+        CLA<-mean(A,trim=tr,na.rm=TRUE)	
+        CLB<-mean(B,trim=tr,na.rm=TRUE)
       }  
       if(CL=="mest"){
         hpsi<-function(x,bend=1.28){
           hpsi<-ifelse(abs(x)<=bend,x,bend*sign(x))
           hpsi
         }
-        mest<-function(x,bend=1.28,na.rm=F){
+        mest<-function(x,bend=1.28,na.rm=TRUE){
           if(na.rm)x<-x[!is.na(x)]
+          if(length(x)==0) return(NA)
           if(mad(x)==0)stop("MAD=0. The M-estimator cannot be computed.")
           y<-(x-median(x))/mad(x)
           A<-sum(hpsi(y,bend))
@@ -111,7 +112,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       }
       if(design=="AB"){
         plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
-        lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
+        lines(c(sum(data[,1]=="A")+0.5,sum(data[,1]=="A")+0.5),c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
         mtext(labels[1],side=3,at=(sum(data[,1]=="A")+1)/2)
         mtext(labels[2],side=3,at=(sum(data[,1]=="A")+(sum(data[,1]=="B")+1)/2))
       }
@@ -121,10 +122,10 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         points(x[data[,1]=="B"],data[,2][data[,1]=="B"],pch=16)
       }
       if(TREND=="LSR"){
-        interceptLSRa<-coefficients(lm(A~MTA))[1]
-        slopeLSRa<-coefficients(lm(A~MTA))[2]
-        interceptLSRb<-coefficients(lm(B~MTB))[1]
-        slopeLSRb<-coefficients(lm(B~MTB))[2]
+        interceptLSRa<-coefficients(lm(A~MTA,na.action=na.omit))[1]
+        slopeLSRa<-coefficients(lm(A~MTA,na.action=na.omit))[2]
+        interceptLSRb<-coefficients(lm(B~MTB,na.action=na.omit))[1]
+        slopeLSRb<-coefficients(lm(B~MTB,na.action=na.omit))[2]
         if(design=="AB"){
           lines(c(1,length(A)),c(interceptLSRa+slopeLSRa,interceptLSRa+slopeLSRa*length(A)),lty=2)
           lines(c(length(A)+1,MT),c(interceptLSRb+slopeLSRb*(length(A)+1),interceptLSRb+slopeLSRb*MT),lty=2)
@@ -145,10 +146,10 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           a2<-A[(length(A)/2+1):length(A)]
           MTa1<-MTA[1:(length(A)/2)]
           MTa2<-MTA[(length(A)/2+1):length(A)]
-          medVALUEa1<-median(a1)
-          medVALUEa2<-median(a2)
-          medTIMEa1<-median(MTa1)
-          medTIMEa2<-median(MTa2)
+          medVALUEa1<-median(a1,na.rm=TRUE)
+          medVALUEa2<-median(a2,na.rm=TRUE)
+          medTIMEa1<-median(MTa1,na.rm=TRUE)
+          medTIMEa2<-median(MTa2,na.rm=TRUE)
           timeA<-c(medTIMEa1,medTIMEa2)
           valuesA<-c(medVALUEa1,medVALUEa2)
           interceptA<-coefficients(lm(valuesA~timeA))[1]
@@ -163,14 +164,14 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           MTa21<-MTA[(ceiling(length(A)/2)+1):length(A)]
           MTa12<-MTA[1:floor(length(A)/2)]
           MTa22<-MTA[(floor(length(A)/2)+1):length(A)]
-          medVALUEa11<-median(a11)
-          medVALUEa21<-median(a21)
-          medVALUEa12<-median(a12)
-          medVALUEa22<-median(a22)
-          medTIMEa11<-median(MTa11)
-          medTIMEa21<-median(MTa21)
-          medTIMEa12<-median(MTa12)
-          medTIMEa22<-median(MTa22)
+          medVALUEa11<-median(a11,na.rm=TRUE)
+          medVALUEa21<-median(a21,na.rm=TRUE)
+          medVALUEa12<-median(a12,na.rm=TRUE)
+          medVALUEa22<-median(a22,na.rm=TRUE)
+          medTIMEa11<-median(MTa11,na.rm=TRUE)
+          medTIMEa21<-median(MTa21,na.rm=TRUE)
+          medTIMEa12<-median(MTa12,na.rm=TRUE)
+          medTIMEa22<-median(MTa22,na.rm=TRUE)
           timeA1<-c(medTIMEa11,medTIMEa21)
           valuesA1<-c(medVALUEa11,medVALUEa21)
           interceptA1<-coefficients(lm(valuesA1~timeA1))[1]
@@ -185,10 +186,10 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           b2<-B[(length(B)/2+1):length(B)]
           MTb1<-MTB[1:(length(B)/2)]
           MTb2<-MTB[(length(B)/2+1):length(B)]
-          medVALUEb1<-median(b1)
-          medVALUEb2<-median(b2)
-          medTIMEb1<-median(MTb1)
-          medTIMEb2<-median(MTb2)
+          medVALUEb1<-median(b1,na.rm=TRUE)
+          medVALUEb2<-median(b2,na.rm=TRUE)
+          medTIMEb1<-median(MTb1,na.rm=TRUE)
+          medTIMEb2<-median(MTb2,na.rm=TRUE)
           timeB<-c(medTIMEb1,medTIMEb2)
           valuesB<-c(medVALUEb1,medVALUEb2)
           interceptB<-coefficients(lm(valuesB~timeB))[1]
@@ -203,14 +204,14 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           MTb21<-MTB[(ceiling(length(B)/2)+1):length(B)]
           MTb12<-MTB[1:floor(length(B)/2)]
           MTb22<-MTB[(floor(length(B)/2)+1):length(B)]
-          medVALUEb11<-median(b11)
-          medVALUEb21<-median(b21)
-          medVALUEb12<-median(b12)
-          medVALUEb22<-median(b22)
-          medTIMEb11<-median(MTb11)
-          medTIMEb21<-median(MTb21)
-          medTIMEb12<-median(MTb12)
-          medTIMEb22<-median(MTb22)
+          medVALUEb11<-median(b11,na.rm=TRUE)
+          medVALUEb21<-median(b21,na.rm=TRUE)
+          medVALUEb12<-median(b12,na.rm=TRUE)
+          medVALUEb22<-median(b22,na.rm=TRUE)
+          medTIMEb11<-median(MTb11,na.rm=TRUE)
+          medTIMEb21<-median(MTb21,na.rm=TRUE)
+          medTIMEb12<-median(MTb12,na.rm=TRUE)
+          medTIMEb22<-median(MTb22,na.rm=TRUE)
           timeB1<-c(medTIMEb11,medTIMEb21)
           valuesB1<-c(medVALUEb11,medVALUEb21)
           interceptB1<-coefficients(lm(valuesB1~timeB1))[1]
@@ -307,18 +308,18 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           MTb2<-MTB[(ceiling(length(B)/3)+1):(ceiling(length(B)/3)+floor(length(B)/3))]
           MTb3<-MTB[(ceiling(length(B)/3)+floor(length(B)/3)+1):length(B)]
         }
-        medTIMEa1<-median(MTa1)
-        medTIMEa2<-median(MTa2)
-        medTIMEa3<-median(MTa3)
-        medVALUEa1<-median(a1)
-        medVALUEa2<-median(a2)
-        medVALUEa3<-median(a3)
-        medTIMEb1<-median(MTb1)
-        medTIMEb2<-median(MTb2)
-        medTIMEb3<-median(MTb3)
-        medVALUEb1<-median(b1)
-        medVALUEb2<-median(b2)
-        medVALUEb3<-median(b3)
+        medTIMEa1<-median(MTa1,na.rm=TRUE)
+        medTIMEa2<-median(MTa2,na.rm=TRUE)
+        medTIMEa3<-median(MTa3,na.rm=TRUE)
+        medVALUEa1<-median(a1,na.rm=TRUE)
+        medVALUEa2<-median(a2,na.rm=TRUE)
+        medVALUEa3<-median(a3,na.rm=TRUE)
+        medTIMEb1<-median(MTb1,na.rm=TRUE)
+        medTIMEb2<-median(MTb2,na.rm=TRUE)
+        medTIMEb3<-median(MTb3,na.rm=TRUE)
+        medVALUEb1<-median(b1,na.rm=TRUE)
+        medVALUEb2<-median(b2,na.rm=TRUE)
+        medVALUEb3<-median(b3,na.rm=TRUE)
         slopeA<-(medVALUEa3-medVALUEa1)/(medTIMEa3-medTIMEa1)
         interceptA<-(1/3)*((medVALUEa1+medVALUEa2+medVALUEa3)-slopeA*(medTIMEa1+medTIMEa2+medTIMEa3))
         slopeB<-(medVALUEb3-medVALUEb1)/(medTIMEb3-medTIMEb1)
@@ -352,11 +353,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       if(TREND=="RM3"){
         RM3a<-numeric()
         for(it in 1:(length(A)-2)){
-          RM3a<-c(RM3a,median(A[it:(it+2)]))
+          RM3a<-c(RM3a,median(A[it:(it+2)],na.rm=TRUE))
         }
         times3A<-numeric()
         for(it in 1:(length(A)-2)){
-          times3A<-c(times3A,median(MTA[it:(it+2)]))
+          times3A<-c(times3A,median(MTA[it:(it+2)],na.rm=TRUE))
         }
         for(it in 1:(length(A)-2)){
           points(times3A[it],RM3a[it],pch=3)
@@ -364,11 +365,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
         RM3b<-numeric()
         for(it in 1:(length(B)-2)){
-          RM3b<-c(RM3b,median(B[it:(it+2)]))
+          RM3b<-c(RM3b,median(B[it:(it+2)],na.rm=TRUE))
         }
         times3B<-numeric()
         for(it in (1:(length(B)-2))){
-          times3B<-c(times3B,median(MTB[it:(it+2)]))
+          times3B<-c(times3B,median(MTB[it:(it+2)],na.rm=TRUE))
         }
         for(it in 1:(length(B)-2)){
           points(times3B[it],RM3b[it],pch=4)
@@ -385,11 +386,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       if(TREND=="RM5"){
         RM5a<-numeric()
         for(it in 1:(length(A)-4)){
-          RM5a<-c(RM5a,median(A[it:(it+4)]))
+          RM5a<-c(RM5a,median(A[it:(it+4)],na.rm=TRUE))
         }
         times5A<-numeric()
         for(it in 1:(length(A)-4)){
-          times5A<-c(times5A,median(MTA[it:(it+4)]))
+          times5A<-c(times5A,median(MTA[it:(it+4)],na.rm=TRUE))
         }
         for(it in 1:(length(A)-4)){
           points(times5A[it],RM5a[it],pch=3)
@@ -397,11 +398,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
         RM5b<-numeric()
         for(it in 1:(length(B)-4)){
-          RM5b<-c(RM5b,median(B[it:(it+4)]))
+          RM5b<-c(RM5b,median(B[it:(it+4)],na.rm=TRUE))
         }
         times5B<-numeric()
         for(it in (1:(length(B)-4))){
-          times5B<-c(times5B,median(MTB[it:(it+4)]))
+          times5B<-c(times5B,median(MTB[it:(it+4)],na.rm=TRUE))
         }
         for(it in 1:(length(B)-4)){
           points(times5B[it],RM5b[it],pch=4)
@@ -418,15 +419,15 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       if(TREND=="RM42"){
         RM4a<-numeric()
         for(it in 1:(length(A)-3)){
-          RM4a<-c(RM4a,median(A[it:(it+3)]))
+          RM4a<-c(RM4a,median(A[it:(it+3)],na.rm=TRUE))
         }
         RM42a<-numeric()
         for(it in 1:(length(RM4a)-1)){
-          RM42a<-c(RM42a,mean(RM4a[it:(it+1)]))
+          RM42a<-c(RM42a,mean(RM4a[it:(it+1)],na.rm=TRUE))
         }
         times42A<-numeric()
         for(it in 1:(length(A)-4)){
-          times42A<-c(times42A,median(MTA[it:(it+4)]))
+          times42A<-c(times42A,median(MTA[it:(it+4)],na.rm=TRUE))
         }
         for(it in 1:(length(A)-4)){
           points(times42A[it],RM42a[it],pch=3)
@@ -434,15 +435,15 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
         RM4b<-numeric()
         for(it in 1:(length(B)-3)){
-          RM4b<-c(RM4b,median(B[it:(it+3)]))
+          RM4b<-c(RM4b,median(B[it:(it+3)],na.rm=TRUE))
         }
         RM42b<-numeric()
         for(it in 1:(length(RM4b)-1)){
-          RM42b<-c(RM42b,mean(RM4b[it:(it+1)]))
+          RM42b<-c(RM42b,mean(RM4b[it:(it+1)],na.rm=TRUE))
         }
         times42B<-numeric()
         for(it in 1:(length(B)-4)){
-          times42B<-c(times42B,median(MTB[it:(it+4)]))
+          times42B<-c(times42B,median(MTB[it:(it+4)],na.rm=TRUE))
         }
         for(it in 1:(length(B)-4)){
           points(times42B[it],RM42b[it],pch=4)
@@ -466,16 +467,16 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
     B2<-data[,2][data[,1]=="B2"]
     if(TREND=="VLP"){
       if(CL=="mean"){
-        CLA1<-mean(A1)
-        CLB1<-mean(B1)
-        CLA2<-mean(A2)
-        CLB2<-mean(B2)
+        CLA1<-mean(A1,na.rm=TRUE)
+        CLB1<-mean(B1,na.rm=TRUE)
+        CLA2<-mean(A2,na.rm=TRUE)
+        CLB2<-mean(B2,na.rm=TRUE)
       }
       if(CL=="median"){
-        CLA1<-median(A1)
-        CLB1<-median(B1)
-        CLA2<-median(A2)
-        CLB2<-median(B2)
+        CLA1<-median(A1,na.rm=TRUE)
+        CLB1<-median(B1,na.rm=TRUE)
+        CLA2<-median(A2,na.rm=TRUE)
+        CLB2<-median(B2,na.rm=TRUE)
       }
       if(CL=="bmed"){
         aa1<-sort(A1)
@@ -483,7 +484,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         aa2<-sort(A2)
         bb2<-sort(B2)
         if(length(aa1)<5){
-          CLA1<-median(data[,2][data[,1]=="A1"])
+          CLA1<-median(data[,2][data[,1]=="A1"],na.rm=TRUE)
         }
         if(length(aa1)==5|length(aa1)==7|length(aa1)==9|length(aa1)==11){
           CLA1<-(aa1[ceiling(length(aa1)/2)-1]+aa1[ceiling(length(aa1)/2)]+aa1[ceiling(length(aa1)/2)+1])/3
@@ -498,7 +499,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           CLA1<-1/10*aa1[length(aa1)/2-2]+1/5*aa1[length(aa1)/2-1]+1/5*aa1[length(aa1)/2]+1/5*aa1[length(aa1)/2+1]+1/5*aa1[length(aa1)/2+2]+1/10*aa1[length(aa1)/2+3]
         }
         if(length(bb1)<5){
-          CLB1<-median(data[,2][data[,1]=="B1"])
+          CLB1<-median(data[,2][data[,1]=="B1"],na.rm=TRUE)
         }
         if(length(bb1)==5|length(bb1)==7|length(bb1)==9|length(bb1)==11){
           CLB1<-(bb1[ceiling(length(bb1)/2)-1]+bb1[ceiling(length(bb1)/2)]+bb1[ceiling(length(bb1)/2)+1])/3
@@ -513,7 +514,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           CLB1<-1/10*bb1[length(bb1)/2-2]+1/5*bb1[length(bb1)/2-1]+1/5*bb1[length(bb1)/2]+1/5*bb1[length(bb1)/2+1]+1/5*bb1[length(bb1)/2+2]+1/10*bb1[length(bb1)/2+3]
         }
         if(length(aa2)<5){
-          CLA2<-median(data[,2][data[,1]=="A2"])
+          CLA2<-median(data[,2][data[,1]=="A2"],na.rm=TRUE)
         }
         if(length(aa2)==5|length(aa2)==7|length(aa2)==9|length(aa2)==11){
           CLA2<-(aa2[ceiling(length(aa2)/2)-1]+aa2[ceiling(length(aa2)/2)]+aa2[ceiling(length(aa2)/2)+1])/3
@@ -544,18 +545,19 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
       }
       if(CL=="trimmean"){
-        CLA1<-mean(A1,trim=tr)
-        CLB1<-mean(B1,trim=tr)
-        CLA2<-mean(A2,trim=tr)
-        CLB2<-mean(B2,trim=tr)
+        CLA1<-mean(A1,trim=tr,na.rm=TRUE)
+        CLB1<-mean(B1,trim=tr,na.rm=TRUE)
+        CLA2<-mean(A2,trim=tr,na.rm=TRUE)
+        CLB2<-mean(B2,trim=tr,na.rm=TRUE)
       }
       if(CL=="mest"){
         hpsi<-function(x,bend=1.28){
           hpsi<-ifelse(abs(x)<=bend,x,bend*sign(x))
           hpsi
         }
-        mest<-function(x,bend=1.28,na.rm=F){
+        mest<-function(x,bend=1.28,na.rm=TRUE){
           if(na.rm)x<-x[!is.na(x)]
+          if(length(x)==0) return(NA)
           if(mad(x)==0)stop("MAD=0. The M-estimator cannot be computed.")
           y<-(x-median(x))/mad(x)
           A<-sum(hpsi(y,bend))
@@ -619,32 +621,34 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         ylab <- "Scores"
       }
       plot(x,data[,2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
-      lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
-      lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
+      lines(c(sum(data[,1]=="A1")+0.5,sum(data[,1]=="A1")+0.5),c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
+      lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+0.5),
+            c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
       mtext(labels[1],side=3,at=(sum(data[,1]=="A1")+1)/2)
       mtext(labels[2],side=3,at=(sum(data[,1]=="A1")+(sum(data[,1]=="B1")+1)/2))
       mtext(labels[3],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+(sum(data[,1]=="A2")+1)/2))
       if(design=="ABAB"){
-        lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),c(min(data[,2])-5,max(data[,2])+5),lty=2)
+        lines(c(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5,sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+0.5),
+              c(min(data[,2],ylim[1],na.rm=TRUE)-5,max(data[,2],ylim[2],na.rm=TRUE)+5),lty=2)
         mtext(labels[4],side=3,at=(sum(data[,1]=="A1")+sum(data[,1]=="B1")+sum(data[,1]=="A2")+(sum(data[,1]=="B2")+1)/2))
       }
       if(TREND=="LSR"){
         xa1<-1:length(A1)
-        interceptLSRa1<-coefficients(lm(A1~xa1))[1]
-        slopeLSRa1<-coefficients(lm(A1~xa1))[2]
+        interceptLSRa1<-coefficients(lm(A1~xa1,na.action=na.omit))[1]
+        slopeLSRa1<-coefficients(lm(A1~xa1,na.action=na.omit))[2]
         xb1<-1:length(B1)
-        interceptLSRb1<-coefficients(lm(B1~xb1))[1]
-        slopeLSRb1<-coefficients(lm(B1~xb1))[2]	
+        interceptLSRb1<-coefficients(lm(B1~xb1,na.action=na.omit))[1]
+        slopeLSRb1<-coefficients(lm(B1~xb1,na.action=na.omit))[2]	
         xa2<-1:length(A2)
-        interceptLSRa2<-coefficients(lm(A2~xa2))[1]
-        slopeLSRa2<-coefficients(lm(A2~xa2))[2]
+        interceptLSRa2<-coefficients(lm(A2~xa2,na.action=na.omit))[1]
+        slopeLSRa2<-coefficients(lm(A2~xa2,na.action=na.omit))[2]
         lines(c(1,length(A1)),c(interceptLSRa1+slopeLSRa1,interceptLSRa1+slopeLSRa1*length(A1)),lty=2)
         lines(c(length(A1)+1,(length(A1)+length(B1))),c(interceptLSRb1+slopeLSRb1,interceptLSRb1+slopeLSRb1*length(B1)),lty=2)
         lines(c(length(A1)+length(B1)+1,(length(A1)+length(B1)+length(A2))),c(interceptLSRa2+slopeLSRa2,interceptLSRa2+slopeLSRa2*length(A2)),lty=2)
         if(design=="ABAB"){
           xb2<-1:length(B2)
-          interceptLSRb2<-coefficients(lm(B2~xb2))[1]
-          slopeLSRb2<-coefficients(lm(B2~xb2))[2]
+          interceptLSRb2<-coefficients(lm(B2~xb2,na.action=na.omit))[1]
+          slopeLSRb2<-coefficients(lm(B2~xb2,na.action=na.omit))[2]
           lines(c(length(A1)+length(B1)+length(A2)+1,MT),c(interceptLSRb2+slopeLSRb2,interceptLSRb2+slopeLSRb2*length(B2)),lty=2)
         }
       }
@@ -654,12 +658,12 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           a12<-A1[(length(A1)/2+1):length(A1)]
           medTIMEa11<-median(x[1:length(a11)])
           medTIMEa12<-median(x[(length(a11)+1):length(A1)])
-          medVALUEa11<-median(a11)
-          medVALUEa12<-median(a12)
+          medVALUEa11<-median(a11,na.rm=TRUE)
+          medVALUEa12<-median(a12,na.rm=TRUE)
           timeA1<-c(medTIMEa11,medTIMEa12)
           valuesA1<-c(medVALUEa11,medVALUEa12)
-          interceptA1<-coefficients(lm(valuesA1~timeA1))[1]
-          slopeA1<-coefficients(lm(valuesA1~timeA1))[2]
+          interceptA1<-coefficients(lm(valuesA1~timeA1,na.action=na.omit))[1]
+          slopeA1<-coefficients(lm(valuesA1~timeA1,na.action=na.omit))[2]
           lines(c(1,length(A1)),c(interceptA1+slopeA1,interceptA1+slopeA1*length(A1)),lty=3)
         }
         if(length(A1)%%2==1){
@@ -671,10 +675,10 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           medTIMEa121<-median(x[(length(a111)+1):length(A1)])
           medTIMEa112<-median(x[1:length(a112)])
           medTIMEa122<-median(x[(length(a112)+1):length(A1)])
-          medVALUEa111<-median(a111)
-          medVALUEa121<-median(a121)
-          medVALUEa112<-median(a112)
-          medVALUEa122<-median(a122)
+          medVALUEa111<-median(a111,na.rm=TRUE)
+          medVALUEa121<-median(a121,na.rm=TRUE)
+          medVALUEa112<-median(a112,na.rm=TRUE)
+          medVALUEa122<-median(a122,na.rm=TRUE)
           timeA11<-c(medTIMEa111,medTIMEa121)
           valuesA11<-c(medVALUEa111,medVALUEa121)
           interceptA11<-coefficients(lm(valuesA11~timeA11))[1]
@@ -691,8 +695,8 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           b12<-B1[(length(B1)/2+1):length(B1)]
           medTIMEb11<-median(x[(length(A1)+1):(length(A1)+length(b11))])
           medTIMEb12<-median(x[(length(A1)+length(b11)+1):(length(A1)+length(B1))])
-          medVALUEb11<-median(b11)
-          medVALUEb12<-median(b12)
+          medVALUEb11<-median(b11,na.rm=TRUE)
+          medVALUEb12<-median(b12,na.rm=TRUE)
           timeB1<-c(medTIMEb11,medTIMEb12)
           valuesB1<-c(medVALUEb11,medVALUEb12)
           interceptB1<-coefficients(lm(valuesB1~timeB1))[1]
@@ -708,10 +712,10 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           medTIMEb121<-median(x[(length(A1)+length(b111)+1):(length(A1)+length(B1))])
           medTIMEb112<-median(x[(length(A1)+1):(length(A1)+length(b112))])
           medTIMEb122<-median(x[(length(A1)+length(b112)+1):(length(A1)+length(B1))])
-          medVALUEb111<-median(b111)
-          medVALUEb121<-median(b121)
-          medVALUEb112<-median(b112)
-          medVALUEb122<-median(b122)
+          medVALUEb111<-median(b111,na.rm=TRUE)
+          medVALUEb121<-median(b121,na.rm=TRUE)
+          medVALUEb112<-median(b112,na.rm=TRUE)
+          medVALUEb122<-median(b122,na.rm=TRUE)
           timeB11<-c(medTIMEb111,medTIMEb121)
           valuesB11<-c(medVALUEb111,medVALUEb121)
           interceptB11<-coefficients(lm(valuesB11~timeB11))[1]
@@ -728,8 +732,8 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           a22<-A2[(length(A2)/2+1):length(A2)]
           medTIMEa21<-median(x[(length(A1)+length(B1)+1):(length(A1)+length(B1)+length(a21))])
           medTIMEa22<-median(x[(length(A1)+length(B1)+length(a21)+1):(length(A1)+length(B1)+length(A2))])
-          medVALUEa21<-median(a21)
-          medVALUEa22<-median(a22)
+          medVALUEa21<-median(a21,na.rm=TRUE)
+          medVALUEa22<-median(a22,na.rm=TRUE)
           timeA2<-c(medTIMEa21,medTIMEa22)
           valuesA2<-c(medVALUEa21,medVALUEa22)
           interceptA2<-coefficients(lm(valuesA2~timeA2))[1]
@@ -745,10 +749,10 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           medTIMEa221<-median(x[(length(A1)+length(B1)+length(a211)+1):(length(A1)+length(B1)+length(A2))])
           medTIMEa212<-median(x[(length(A1)+length(B1)+1):(length(A1)+length(B1)+length(a212))])
           medTIMEa222<-median(x[(length(A1)+length(B1)+length(a212)+1):(length(A1)+length(B1)+length(A2))])
-          medVALUEa211<-median(a211)
-          medVALUEa221<-median(a221)
-          medVALUEa212<-median(a212)
-          medVALUEa222<-median(a222)
+          medVALUEa211<-median(a211,na.rm=TRUE)
+          medVALUEa221<-median(a221,na.rm=TRUE)
+          medVALUEa212<-median(a212,na.rm=TRUE)
+          medVALUEa222<-median(a222,na.rm=TRUE)
           timeA21<-c(medTIMEa211,medTIMEa221)
           valuesA21<-c(medVALUEa211,medVALUEa221)
           interceptA21<-coefficients(lm(valuesA21~timeA21))[1]
@@ -766,8 +770,8 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
             b22<-B2[(length(B2)/2+1):length(B2)]
             medTIMEb21<-median(x[(length(A1)+length(B1)+length(A2)+1):(length(A1)+length(B1)+length(A2)+length(b21))])
             medTIMEb22<-median(x[(length(A1)+length(B1)+length(A2)+length(b21)+1):MT])
-            medVALUEb21<-median(b21)
-            medVALUEb22<-median(b22)
+            medVALUEb21<-median(b21,na.rm=TRUE)
+            medVALUEb22<-median(b22,na.rm=TRUE)
             timeB2<-c(medTIMEb21,medTIMEb22)
             valuesB2<-c(medVALUEb21,medVALUEb22)
             interceptB2<-coefficients(lm(valuesB2~timeB2))[1]
@@ -783,10 +787,10 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
             medTIMEb221<-median(x[(length(A1)+length(B1)+length(A2)+length(b211)+1):MT])
             medTIMEb212<-median(x[(length(A1)+length(B1)+length(A2)+1):(length(A1)+length(B1)+length(A2)+length(b212))])
             medTIMEb222<-median(x[(length(A1)+length(B1)+length(A2)+length(b212)+1):MT])
-            medVALUEb211<-median(b211)
-            medVALUEb221<-median(b221)
-            medVALUEb212<-median(b212)
-            medVALUEb222<-median(b222)
+            medVALUEb211<-median(b211,na.rm=TRUE)
+            medVALUEb221<-median(b221,na.rm=TRUE)
+            medVALUEb212<-median(b212,na.rm=TRUE)
+            medVALUEb222<-median(b222,na.rm=TRUE)
             timeB21<-c(medTIMEb211,medTIMEb221)
             valuesB21<-c(medVALUEb211,medVALUEb221)
             interceptB21<-coefficients(lm(valuesB21~timeB21))[1]
@@ -849,21 +853,21 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         medTIMEa11<-median(x[1:length(a11)])
         medTIMEa12<-median(x[(length(a11)+1):(length(a11)+length(a12))])
         medTIMEa13<-median(x[(length(a11)+length(a12)+1):length(A1)])
-        medVALUEa11<-median(a11)
-        medVALUEa12<-median(a12)
-        medVALUEa13<-median(a13)
+        medVALUEa11<-median(a11,na.rm=TRUE)
+        medVALUEa12<-median(a12,na.rm=TRUE)
+        medVALUEa13<-median(a13,na.rm=TRUE)
         medTIMEb11<-median(x[(length(A1)+1):(length(A1)+length(b11))])
         medTIMEb12<-median(x[(length(A1)+length(b11)+1):(length(A1)+length(b11)+length(b12))])
         medTIMEb13<-median(x[(length(A1)+length(b11)+length(b12)+1):(length(A1)+length(B1))])
-        medVALUEb11<-median(b11)
-        medVALUEb12<-median(b12)
-        medVALUEb13<-median(b13)
+        medVALUEb11<-median(b11,na.rm=TRUE)
+        medVALUEb12<-median(b12,na.rm=TRUE)
+        medVALUEb13<-median(b13,na.rm=TRUE)
         medTIMEa21<-median(x[(length(A1)+length(B1)+1):(length(A1)+length(B1)+length(a21))])
         medTIMEa22<-median(x[(length(A1)+length(B1)+length(a21)+1):(length(A1)+length(B1)+length(a21)+length(a22))])
         medTIMEa23<-median(x[(length(A1)+length(B1)+length(a21)+length(a22)+1):(length(A1)+length(B1)+length(A2))])
-        medVALUEa21<-median(a21)
-        medVALUEa22<-median(a22)
-        medVALUEa23<-median(a23)
+        medVALUEa21<-median(a21,na.rm=TRUE)
+        medVALUEa22<-median(a22,na.rm=TRUE)
+        medVALUEa23<-median(a23,na.rm=TRUE)
         slopeA1<-(medVALUEa13-medVALUEa11)/(medTIMEa13-medTIMEa11)
         interceptA1<-(1/3)*((medVALUEa11+medVALUEa12+medVALUEa13)-slopeA1*(medTIMEa11+medTIMEa12+medTIMEa13))
         lines(c(1,length(A1)),c(interceptA1+slopeA1,interceptA1+slopeA1*length(A1)),lty=2)
@@ -907,9 +911,9 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           medTIMEb21<-median(x[(length(A1)+length(B1)+length(A2)+1):(length(A1)+length(B1)+length(A2)+length(b21))])
           medTIMEb22<-median(x[(length(A1)+length(B1)+length(A2)+length(b21)+1):(length(A1)+length(B1)+length(A2)+length(b21)+length(b22))])
           medTIMEb23<-median(x[(length(A1)+length(B1)+length(A2)+length(b21)+length(b22)+1):MT])
-          medVALUEb21<-median(b21)
-          medVALUEb22<-median(b22)
-          medVALUEb23<-median(b23)
+          medVALUEb21<-median(b21,na.rm=TRUE)
+          medVALUEb22<-median(b22,na.rm=TRUE)
+          medVALUEb23<-median(b23,na.rm=TRUE)
           slopeB2<-(medVALUEb23-medVALUEb21)/(medTIMEb23-medTIMEb21)
           interceptB2<-(1/3)*((medVALUEb21+medVALUEb22+medVALUEb23)-slopeB2*(medTIMEb21+medTIMEb22+medTIMEb23))
           lines(c((length(A1)++length(B1)+length(A2)+1),MT),c(interceptB2+slopeB2*(length(A1)+length(B1)+length(A2)+1),interceptB2+slopeB2*MT),lty=2)
@@ -923,7 +927,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       if(TREND=="RM3"){
         RM3A1<-numeric()
         for(it in 1:(length(A1)-2)){
-          RM3A1<-c(RM3A1,median(A1[it:(it+2)]))
+          RM3A1<-c(RM3A1,median(A1[it:(it+2)],na.rm=TRUE))
         }
         times3A1<-numeric()
         for(it in 1:(length(A1)-2)){
@@ -935,7 +939,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
         RM3B1<-numeric()
         for(it in 1:(length(B1)-2)){
-          RM3B1<-c(RM3B1,median(B1[it:(it+2)]))
+          RM3B1<-c(RM3B1,median(B1[it:(it+2)],na.rm=TRUE))
         }
         times3B1<-numeric()
         for(it in (length(A1)+1):(length(A1)+length(B1)-2)){
@@ -947,7 +951,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
         RM3A2<-numeric()
         for(it in 1:(length(A2)-2)){
-          RM3A2<-c(RM3A2,median(A2[it:(it+2)]))
+          RM3A2<-c(RM3A2,median(A2[it:(it+2)],na.rm=TRUE))
         }
         times3A2<-numeric()
         for(it in (length(A1)+length(B1)+1):(length(A1)+length(B1)+length(A2)-2)){
@@ -960,7 +964,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         if(design=="ABAB"){
           RM3B2<-numeric()
           for(it in 1:(length(B2)-2)){
-            RM3B2<-c(RM3B2,median(B2[it:(it+2)]))
+            RM3B2<-c(RM3B2,median(B2[it:(it+2)],na.rm=TRUE))
           }
           times3B2<-numeric()
           for(it in (length(A1)+length(B1)+length(A2)+1):(MT-2)){
@@ -975,7 +979,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       if(TREND=="RM5"){
         RM5A1<-numeric()
         for(it in 1:(length(A1)-4)){
-          RM5A1<-c(RM5A1,median(A1[it:(it+4)]))
+          RM5A1<-c(RM5A1,median(A1[it:(it+4)],na.rm=TRUE))
         }
         times5A1<-numeric()
         for(it in 1:(length(A1)-4)){
@@ -987,7 +991,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
         RM5B1<-numeric()
         for(it in 1:(length(B1)-4)){
-          RM5B1<-c(RM5B1,median(B1[it:(it+4)]))
+          RM5B1<-c(RM5B1,median(B1[it:(it+4)],na.rm=TRUE))
         }
         times5B1<-numeric()
         for(it in (length(A1)+1):(length(A1)+length(B1)-4)){
@@ -999,7 +1003,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
         RM5A2<-numeric()
         for(it in 1:(length(A2)-4)){
-          RM5A2<-c(RM5A2,median(A2[it:(it+4)]))
+          RM5A2<-c(RM5A2,median(A2[it:(it+4)],na.rm=TRUE))
         }
         times5A2<-numeric()
         for(it in (length(A1)+length(B1)+1):(length(A1)+length(B1)+length(A2)-4)){
@@ -1012,7 +1016,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         if(design=="ABAB"){
           RM5B2<-numeric()
           for(it in 1:(length(B2)-4)){
-            RM5B2<-c(RM5B2,median(B2[it:(it+4)]))
+            RM5B2<-c(RM5B2,median(B2[it:(it+4)],na.rm=TRUE))
           }
           times5B2<-numeric()
           for(it in (length(A1)+length(B1)+length(A2)+1):(MT-4)){
@@ -1027,11 +1031,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       if(TREND=="RM42"){
         RM4A1<-numeric()
         for(it in 1:(length(A1)-3)){
-          RM4A1<-c(RM4A1,median(A1[it:(it+3)]))
+          RM4A1<-c(RM4A1,median(A1[it:(it+3)],na.rm=TRUE))
         }
         RM42A1<-numeric()
         for(it in 1:(length(RM4A1)-1)){
-          RM42A1<-c(RM42A1,mean(RM4A1[it:(it+1)]))
+          RM42A1<-c(RM42A1,mean(RM4A1[it:(it+1)],na.rm=TRUE))
         }
         times42A1<-numeric()
         for(it in 1:(length(A1)-4)){
@@ -1043,11 +1047,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
         RM4B1<-numeric()
         for(it in 1:(length(B1)-3)){
-          RM4B1<-c(RM4B1,median(B1[it:(it+3)]))
+          RM4B1<-c(RM4B1,median(B1[it:(it+3)],na.rm=TRUE))
         }
         RM42B1<-numeric()
         for(it in 1:(length(RM4B1)-1)){
-          RM42B1<-c(RM42B1,mean(RM4B1[it:(it+1)]))
+          RM42B1<-c(RM42B1,mean(RM4B1[it:(it+1)],na.rm=TRUE))
         }
         times42B1<-numeric()
         for(it in (length(A1)+1):(length(A1)+length(B1)-4)){
@@ -1059,11 +1063,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         }
         RM4A2<-numeric()
         for(it in 1:(length(A2)-3)){
-          RM4A2<-c(RM4A2,median(A2[it:(it+3)]))
+          RM4A2<-c(RM4A2,median(A2[it:(it+3)],na.rm=TRUE))
         }
         RM42A2<-numeric()
         for(it in 1:(length(RM4A2)-1)){
-          RM42A2<-c(RM42A2,mean(RM4A2[it:(it+1)]))
+          RM42A2<-c(RM42A2,mean(RM4A2[it:(it+1)],na.rm=TRUE))
         }
         times42A2<-numeric()
         for(it in (length(A1)+length(B1)+1):(length(A1)+length(B1)+length(A2)-4)){
@@ -1076,11 +1080,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         if(design=="ABAB"){
           RM4B2<-numeric()
           for(it in 1:(length(B2)-3)){
-            RM4B2<-c(RM4B2,median(B2[it:(it+3)]))
+            RM4B2<-c(RM4B2,median(B2[it:(it+3)],na.rm=TRUE))
           }
           RM42B2<-numeric()
           for(it in 1:(length(RM4B2)-1)){
-            RM42B2<-c(RM42B2,mean(RM4B2[it:(it+1)]))
+            RM42B2<-c(RM42B2,mean(RM4B2[it:(it+1)],na.rm=TRUE))
           }
           times42B2<-numeric()
           for(it in (length(A1)+length(B1)+length(A2)+1):(MT-4)){
@@ -1103,18 +1107,18 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
       B<-data[,it*2][data[,(it*2)-1]=="B"]
       if(TREND=="VLP"){
         if(CL=="mean"){
-          CLA<-mean(A)
-          CLB<-mean(B)
+          CLA<-mean(A,na.rm=TRUE)
+          CLB<-mean(B,na.rm=TRUE)
         }
         if(CL=="median"){
-          CLA<-median(A)
-          CLB<-median(B)
+          CLA<-median(A,na.rm=TRUE)
+          CLB<-median(B,na.rm=TRUE)
         }
         if(CL=="bmed"){
           aa<-sort(A)
           bb<-sort(B)
           if(length(aa)<5){
-            CLA<-median(A)
+            CLA<-median(A,na.rm=TRUE)
           }
           if(length(aa)==5|length(aa)==7|length(aa)==9|length(aa)==11){
             CLA<-(aa[ceiling(length(aa)/2)-1]+aa[ceiling(length(aa)/2)]+aa[ceiling(length(aa)/2)+1])/3
@@ -1129,7 +1133,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
             CLA<-1/10*aa[length(aa)/2-2]+1/5*aa[length(aa)/2-1]+1/5*aa[length(aa)/2]+1/5*aa[length(aa)/2+1]+1/5*aa[length(aa)/2+2]+1/10*aa[length(aa)/2+3]
           }
           if(length(bb)<5){
-            CLB<-median(B)
+            CLB<-median(B,na.rm=TRUE)
           }
           if(length(bb)==5|length(bb)==7|length(bb)==9|length(bb)==11){
             CLB<-(bb[ceiling(length(bb)/2)-1]+bb[ceiling(length(bb)/2)]+bb[ceiling(length(bb)/2)+1])/3
@@ -1145,16 +1149,17 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           }
         }
         if(CL=="trimmean"){
-          CLA<-mean(A,trim=tr)	
-          CLB<-mean(B,trim=tr)
+          CLA<-mean(A,trim=tr,na.rm=TRUE)	
+          CLB<-mean(B,trim=tr,na.rm=TRUE)
         }
         if(CL=="mest"){
           hpsi<-function(x,bend=1.28){
             hpsi<-ifelse(abs(x)<=bend,x,bend*sign(x))
             hpsi
           }
-          mest<-function(x,bend=1.28,na.rm=F){
+          mest<-function(x,bend=1.28,na.rm=TRUE){
             if(na.rm)x<-x[!is.na(x)]
+            if(length(x)==0) return(NA)
             if(mad(x)==0)stop("MAD=0. The M-estimator cannot be computed.")
             y<-(x-median(x))/mad(x)
             A<-sum(hpsi(y,bend))
@@ -1202,16 +1207,17 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           ylab <- "Scores"
         }
         plot(x,data[,it*2],xlab=xlab,ylab=ylab,ylim=ylim,pch=16)
-        lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),c(min(data[,it*2])-5,max(data[,it*2])+5),lty=2)
+        lines(c(sum(data[,(it*2)-1]=="A")+0.5,sum(data[,(it*2)-1]=="A")+0.5),
+              c(min(data[,it*2],ylim[1],na.rm=TRUE)-5,max(data[,it*2],ylim[2],na.rm=TRUE)+5),lty=2)
         mtext(labels[1],side=3,at=(sum(data[,(it*2)-1]=="A")+1)/2)
         mtext(labels[2],side=3,at=(sum(data[,(it*2)-1]=="A")+(sum(data[,(it*2)-1]=="B")+1)/2))
         if(TREND=="LSR"){
           xa<-1:length(A)
-          interceptLSRa<-coefficients(lm(A~xa))[1]
-          slopeLSRa<-coefficients(lm(A~xa))[2]
+          interceptLSRa<-coefficients(lm(A~xa,na.action=na.omit))[1]
+          slopeLSRa<-coefficients(lm(A~xa,na.action=na.omit))[2]
           xb<-1:length(B)
-          interceptLSRb<-coefficients(lm(B~xb))[1]
-          slopeLSRb<-coefficients(lm(B~xb))[2]
+          interceptLSRb<-coefficients(lm(B~xb,na.action=na.omit))[1]
+          slopeLSRb<-coefficients(lm(B~xb,na.action=na.omit))[2]
           lines(c(1,length(A)),c(interceptLSRa+slopeLSRa,interceptLSRa+slopeLSRa*length(A)),lty=2)
           lines(c(length(A)+1,MT),c(interceptLSRb+slopeLSRb,interceptLSRb+slopeLSRb*length(B)),lty=2)
         } 
@@ -1221,8 +1227,8 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
             a2<-A[(length(A)/2+1):length(A)]
             medTIMEa1<-median(x[1:length(a1)])
             medTIMEa2<-median(x[(length(a1)+1):length(A)])
-            medVALUEa1<-median(a1)
-            medVALUEa2<-median(a2)
+            medVALUEa1<-median(a1,na.rm=TRUE)
+            medVALUEa2<-median(a2,na.rm=TRUE)
             timeA<-c(medTIMEa1,medTIMEa2)
             valuesA<-c(medVALUEa1,medVALUEa2)
             interceptA<-coefficients(lm(valuesA~timeA))[1]
@@ -1238,10 +1244,10 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
             medTIMEa21<-median(x[(length(a11)+1):length(A)])
             medTIMEa12<-median(x[1:length(a12)])
             medTIMEa22<-median(x[(length(a12)+1):length(A)])
-            medVALUEa11<-median(a11)
-            medVALUEa21<-median(a21)
-            medVALUEa12<-median(a12)
-            medVALUEa22<-median(a22)
+            medVALUEa11<-median(a11,na.rm=TRUE)
+            medVALUEa21<-median(a21,na.rm=TRUE)
+            medVALUEa12<-median(a12,na.rm=TRUE)
+            medVALUEa22<-median(a22,na.rm=TRUE)
             timeA1<-c(medTIMEa11,medTIMEa21)
             valuesA1<-c(medVALUEa11,medVALUEa21)
             interceptA1<-coefficients(lm(valuesA1~timeA1))[1]
@@ -1258,8 +1264,8 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
             b2<-B[(length(B)/2+1):length(B)]
             medTIMEb1<-median(x[(length(A)+1):(length(A)+length(b1))])
             medTIMEb2<-median(x[(length(A)+length(b1)+1):(length(A)+length(B))])
-            medVALUEb1<-median(b1)
-            medVALUEb2<-median(b2)
+            medVALUEb1<-median(b1,na.rm=TRUE)
+            medVALUEb2<-median(b2,na.rm=TRUE)
             timeB<-c(medTIMEb1,medTIMEb2)
             valuesB<-c(medVALUEb1,medVALUEb2)
             interceptB<-coefficients(lm(valuesB~timeB))[1]
@@ -1275,10 +1281,10 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
             medTIMEb21<-median(x[(length(A)+length(b11)+1):(length(A)+length(B))])
             medTIMEb12<-median(x[(length(A)+1):(length(A)+length(b12))])
             medTIMEb22<-median(x[(length(A)+length(b12)+1):(length(A)+length(B))])
-            medVALUEb11<-median(b11)
-            medVALUEb21<-median(b21)
-            medVALUEb12<-median(b12)
-            medVALUEb22<-median(b22)
+            medVALUEb11<-median(b11,na.rm=TRUE)
+            medVALUEb21<-median(b21,na.rm=TRUE)
+            medVALUEb12<-median(b12,na.rm=TRUE)
+            medVALUEb22<-median(b22,na.rm=TRUE)
             timeB1<-c(medTIMEb11,medTIMEb21)
             valuesB1<-c(medVALUEb11,medVALUEb21)
             interceptB1<-coefficients(lm(valuesB1~timeB1))[1]
@@ -1325,15 +1331,15 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           medTIMEa1<-median(x[1:length(a1)])
           medTIMEa2<-median(x[(length(a1)+1):(length(a1)+length(a2))])
           medTIMEa3<-median(x[(length(a1)+length(a2)+1):length(A)])
-          medVALUEa1<-median(a1)
-          medVALUEa2<-median(a2)
-          medVALUEa3<-median(a3)
+          medVALUEa1<-median(a1,na.rm=TRUE)
+          medVALUEa2<-median(a2,na.rm=TRUE)
+          medVALUEa3<-median(a3,na.rm=TRUE)
           medTIMEb1<-median(x[(length(A)+1):(length(A)+length(b1))])
           medTIMEb2<-median(x[(length(A)+length(b1)+1):(length(A)+length(b1)+length(b2))])
           medTIMEb3<-median(x[(length(A)+length(b1)+length(b2)+1):MT])
-          medVALUEb1<-median(b1)
-          medVALUEb2<-median(b2)
-          medVALUEb3<-median(b3)
+          medVALUEb1<-median(b1,na.rm=TRUE)
+          medVALUEb2<-median(b2,na.rm=TRUE)
+          medVALUEb3<-median(b3,na.rm=TRUE)
           slopeA<-(medVALUEa3-medVALUEa1)/(medTIMEa3-medTIMEa1)
           interceptA<-(1/3)*((medVALUEa1+medVALUEa2+medVALUEa3)-slopeA*(medTIMEa1+medTIMEa2+medTIMEa3))
           lines(c(1,length(A)),c(interceptA+slopeA,interceptA+slopeA*length(A)),lty=2)
@@ -1354,7 +1360,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         if(TREND=="RM3"){
           RM3a<-numeric()
           for(itr in 1:(length(A)-2)){
-            RM3a<-c(RM3a,median(A[itr:(itr+2)]))
+            RM3a<-c(RM3a,median(A[itr:(itr+2)],na.rm=TRUE))
           }
           times3A<-numeric()
           for(itr in 1:(length(A)-2)){
@@ -1366,7 +1372,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           }
           RM3b<-numeric()
           for(itr in 1:(length(B)-2)){
-            RM3b<-c(RM3b,median(B[itr:(itr+2)]))
+            RM3b<-c(RM3b,median(B[itr:(itr+2)],na.rm=TRUE))
           }
           times3B<-numeric()
           for(itr in (length(A)+1):(MT-2)){
@@ -1380,7 +1386,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         if(TREND=="RM5"){
           RM5a<-numeric()
           for(itr in 1:(length(A)-4)){
-            RM5a<-c(RM5a,median(A[itr:(itr+4)]))
+            RM5a<-c(RM5a,median(A[itr:(itr+4)],na.rm=TRUE))
           }
           times5A<-numeric()
           for(itr in 1:(length(A)-4)){
@@ -1392,7 +1398,7 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           }
           RM5b<-numeric()
           for(itr in 1:(length(B)-4)){
-            RM5b<-c(RM5b,median(B[itr:(itr+4)]))
+            RM5b<-c(RM5b,median(B[itr:(itr+4)],na.rm=TRUE))
           }
           times5B<-numeric()
           for(itr in (length(A)+1):(MT-4)){
@@ -1406,11 +1412,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
         if(TREND=="RM42"){
           RM4a<-numeric()
           for(itr in 1:(length(A)-3)){
-            RM4a<-c(RM4a,median(A[itr:(itr+3)]))
+            RM4a<-c(RM4a,median(A[itr:(itr+3)],na.rm=TRUE))
           }
           RM42a<-numeric()
           for(itr in 1:(length(RM4a)-1)){
-            RM42a<-c(RM42a,mean(RM4a[itr:(itr+1)]))
+            RM42a<-c(RM42a,mean(RM4a[itr:(itr+1)],na.rm=TRUE))
           }
           times42A<-numeric()
           for(itr in 1:(length(A)-4)){
@@ -1422,11 +1428,11 @@ function(design,TREND,CL,tr,data=read.table(file.choose(new=FALSE)),xlab=NULL,yl
           }
           RM4b<-numeric()
           for(itr in 1:(length(B)-3)){
-            RM4b<-c(RM4b,median(B[itr:(itr+3)]))
+            RM4b<-c(RM4b,median(B[itr:(itr+3)],na.rm=TRUE))
           }
           RM42b<-numeric()
           for(itr in 1:(length(RM4b)-1)){
-            RM42b<-c(RM42b,mean(RM4b[itr:(itr+1)]))
+            RM42b<-c(RM42b,mean(RM4b[itr:(itr+1)],na.rm=TRUE))
           }
           times42B<-numeric()
           for(itr in (length(A)+1):(MT-4)){
